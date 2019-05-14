@@ -1,5 +1,6 @@
 from django.shortcuts import render
 from django.views.generic import ListView
+from accounts.views import output_seller
 # from django.views import ListView
 
 
@@ -22,3 +23,16 @@ def product_list_view(request):
         'object_list': queryset
     }
     return render(request, "products/list.html", context)
+
+def output_product(product):
+    """
+    Returns product dict
+    """
+    return {
+        "Title": product.title,
+        "Description": product.description,
+        "Price": product.price,
+        "Seller": output_seller(product.seller_id),
+        "Stock": product.stock,
+        "Active": product.active
+    }
