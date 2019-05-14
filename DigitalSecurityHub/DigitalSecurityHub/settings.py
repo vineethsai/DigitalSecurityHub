@@ -37,15 +37,12 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'orders',
-    'products',
-    'shop'
+    # 'orders.apps.OrdersConfig',
+    # 'products.apps.ProductsConfig',
+    # 'shop.apps.ShopConfig',
+    # 'accounts.apps.AccountsConfig',
+    # 'auth.apps.AuthConfig'
 ]
-
-AUTH_USER_MODEL = 'accounts.User' #changes the built-in user model to ours
-LOGIN_URL = '/login/'
-LOGIN_URL_REDIRECT = '/'
-LOGOUT_URL = '/logout/'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -57,7 +54,6 @@ MIDDLEWARE = [
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
 ]
 
-LOGOUT_REDIRECT_URL = '/login/'
 ROOT_URLCONF = 'DigitalSecurityHub.urls'
 
 TEMPLATES = [
