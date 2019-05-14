@@ -40,9 +40,13 @@ INSTALLED_APPS = [
     # 'orders.apps.OrdersConfig',
     'products.apps.ProductsConfig',
     # 'shop.apps.ShopConfig',
-    # 'accounts.apps.AccountsConfig',
-    # 'auth.apps.AuthConfig'
+    'accounts.apps.AccountsConfig',
+    'django_extensions',
+    'crispy_forms',
+
 ]
+
+# AUTH_USER_MODEL = 'auth.User'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',

@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block title %} New post {% endblock %}
+{% block content %}
+{% if Customer.type == 'Vendor' %}
+    <form action="/accounts/seller"  method="post">{% csrf_token %}
+        {{ vendor_form_1|crispy }}
+        <br><button type="submit" value="submit" class="btn btn-success">Submit</button>
+    </form>
+    <form action="/accounts/company"  method="post">{% csrf_token %}
+        {{ vendor_form_1|crispy }}
+        <br><button type="submit" value="submit" class="btn btn-success">Submit</button>
+    </form>
+{% else %}
+    <form action="/accounts/customer"  method="post">{% csrf_token %}
+        {{ customer_form|crispy }}
+        <br><button type="submit" value="submit" class="btn btn-success">Submit</button>
+    </form>
+{% endif %}
+{% endblock %}
