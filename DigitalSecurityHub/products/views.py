@@ -22,3 +22,25 @@ def product_list_view(request):
         'object_list': queryset
     }
     return render(request, "products/list.html", context)
+
+def output_company(company):
+    """
+    Outputs dict with company information
+    """
+    return {
+        "Name": company.Name,
+        "Address": company.Address
+    }
+
+def output_product(product):
+    """
+    Returns product dict
+    """
+    return {
+        "Title": product.title,
+        "Description": product.description,
+        "Price": product.price,
+        "Seller": output_seller(product.seller_id),
+        "Stock": product.stock,
+        "Active": product.active
+    }
