@@ -2,7 +2,7 @@
 INFO 441 project
 
 # ERD
-![ERD](/media/project\ ERD.png)
+![ERD](https://github.com/vineethsai/DigitalSecurityHub/blob/quinn-a4-2/media/Project%20ERD.png)
 
 # API
 ## cart
