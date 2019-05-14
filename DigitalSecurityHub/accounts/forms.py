@@ -4,9 +4,9 @@ from django.utils.translation import ugettext_lazy as _
 
 
 RELEVANCE_CHOICES = (
-    (1, _("Seller")),
-    (2, _("Vendor"))
-)
+        (1, _("Customer")),
+        (2, _("Vendor"))
+    )
 
 
 class SignupForm(forms.Form):
@@ -25,7 +25,7 @@ class SignupForm(forms.Form):
     type = forms.ChoiceField(choices=RELEVANCE_CHOICES, widget=forms.RadioSelect, required=True)
 
 
-class LoginForm(forms.Form):
+class SigninForm(forms.Form):
     """
     Signin form
     """
@@ -41,10 +41,11 @@ class CustomerForm(forms.Form):
     city = forms.CharField(label='City', max_length=30, required=True)
     state = forms.CharField(label='State', max_length=30, required=True)
     zip = forms.IntegerField(label='Zip code', required=True)
-    birth_date = forms.DateField(label='Birth Date', required=True)
+    # birth_date = forms.DateField(label='Birth Date', required=True, widget=forms.SelectDateWidget())
 
 
 class CompanyForm(forms.Form):
+    name = forms.CharField(label='Company Name', max_length=30, required=True)
     address = forms.CharField(label='Company Address', max_length=30, required=True)
     city = forms.CharField(label='City', max_length=30, required=True)
     state = forms.CharField(label='State', max_length=30, required=True)

@@ -10,17 +10,17 @@ class Customer(models.Model):
         (2, _("Vendor"))
     )
     customer_id = models.OneToOneField(User, on_delete=models.CASCADE, default=1)
-    address = models.CharField(max_length=100, default='')
-    city = models.CharField(max_length=100, default='')
-    state = models.CharField(max_length=100, default='')
-    zip = models.IntegerField(default=12345)
+    address = models.TextField(max_length=100, default='')
+    city = models.CharField(max_length=100, default='Seattle')
+    state = models.CharField(max_length=100, default='WA')
+    zip = models.IntegerField(default=98105)
     birth_date = models.DateField(default=datetime.date.today)
     type = models.CharField(choices=RELEVANCE_CHOICES, max_length=2)
 
 
 class Company(models.Model):
     name = models.CharField(max_length=100, default='')
-    address = models.CharField(max_length=100, default='')
+    address = models.TextField(max_length=100, default='')
     city = models.CharField(max_length=100, default='')
     state = models.CharField(max_length=100, default='')
     zip = models.IntegerField(default=12345)
