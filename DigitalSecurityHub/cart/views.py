@@ -22,8 +22,8 @@ def cart(request):
         OPTIONAL: delete quantity
     """
     # Verifies user is signed in.
-    # if request.user.is_authenticated:
-        # return HttpResponse(status=401)
+    if request.user.is_authenticated:
+        return HttpResponse(status=401)
 
     # Attempts to get users all items in users cart
     try:
