@@ -4,10 +4,10 @@ from . import views
 
 app_name = 'shop'
 urlpatterns = [
-    path('browse', views.browse, name='browse'),
+    # path('browse', views.browse, name='browse'),
     path('<int:product_id>/review', views.productReview, name='specificProduct'),
     path(
-        '<int:product_id>/review/<int:review_id>',
+        'review/<int:review_id>',
         views.specificProductReview,
         name='specificProductReview'
     )

@@ -6,14 +6,14 @@ from django.contrib.auth.models import User
 from shop.models import Review
 from products.models import Product
 from products.views import output_product
-from auth.views import output_customer
-from auth.models import Customer
+from accounts.views import output_customer
+from accounts.models import Customer
 
 # Create your views here.
 def productReview(request, product_id):
     """
     Allows users to view and interact with specific products.
-    GET: lists all reviews for product
+    GET: renders a lists all reviews for product
     POST: adds a review for the product.
     DELETE: removes all reviews for the product if user is an admin.
     """
@@ -21,16 +21,24 @@ def productReview(request, product_id):
     try:
         product = Product.objects.get(id=product_id)
     except:
-        return HttpResponse("Failed to find channel.", status=404)
+        return HttpResponse("Failed to find product.", status=404)
 
     if request.method == "GET":
         output_list = []
+        rating_sum = 0
+        rating_count = 0
         # Outputs JSON response of all methods for given product id
         for review in Review.objects.filter(product_id=product_id):
             output_list.append(output_review(review))
+            rating_sum += review.rating
+            rating_count += 1
 
         # Returns json serialized message
-        return JsonResponse(user_list, safe=False)
+        return render(request, "shop/reviewList.html", {
+            "reviews": output_list,
+            "product": Product.objects.get(id=product_id),
+            "avg_rating": 0 if rating_count is 0 else rating_sum / rating_count
+        })
 
     # All other http types require json
     try:
@@ -48,8 +56,8 @@ def productReview(request, product_id):
             new_review = Review.objects.create(
                 review_text = json_post["review"],
                 rating = json_post["rating"],
-                customer_id = Customer.objects.get(id=request.user.id),
-                product_id = product,
+                customer_id = Customer.objects.get(id=request.user.customer.id),
+                product_id = product
             )
         except:
             return HttpResponse("Failed to create review", status=500)
@@ -72,10 +80,10 @@ def productReview(request, product_id):
 
     return HttpResponse("Method not allowed on shop/" + product_id, status=405)
 
-def specificProductReview(request, product_id, review_id):
+def specificProductReview(request, review_id):
     """
     Allows user to interact with their review
-    GET: lists JSON of review for product
+    GET: renders the specific review
     PATCH: edits review is poster
     DELETE: deletes review if poster
     """
@@ -83,18 +91,20 @@ def specificProductReview(request, product_id, review_id):
     try:
         review = Review.objects.get(id=review_id)
     except:
-        return HttpResponse("Failed to find channel.", status=404)
+        return HttpResponse("Failed to find review.", status=404)
 
     if request.method == "GET":
-        return JsonResponse(output_review(review), safe=False)
+        return render(request, "shop/specificReview.html", {"review": output_review(review)})
 
     # Verifies user is the owner of the review
-    if review.customer_id.id is not Customer.objects.get(id=request.user.id).id:
-        return HttpResponse(status=403)
+    try:
+        if review.customer_id.id is not Customer.objects.get(user=request.user).id:
+            return HttpResponse(status=403)
+    except:
+        return HttpResponse("Failed to find Customer.", status=404)
 
     if request.method == "PATCH":
         # Gets JSON input
-        # All other http types require json
         try:
             json_post = json.loads(request.body)
         except:
@@ -109,6 +119,7 @@ def specificProductReview(request, product_id, review_id):
         return JsonResponse(output_review(review), status=200)
 
     if request.method == "DELETE":
+        # Deletes review
         try:
             review.delete()
         except:
@@ -116,7 +127,7 @@ def specificProductReview(request, product_id, review_id):
         return HttpResponse("Review Deleted!", status=200)
 
     return HttpResponse(
-        "Method not allowed on shop/" product_id + "/" + review_id,
+        "Method not allowed on shop/" + product_id + "/" + review_id,
         status=405
     )
 
