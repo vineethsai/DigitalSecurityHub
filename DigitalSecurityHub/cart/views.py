@@ -30,7 +30,8 @@ def cart(request):
 
     # Attempts to get users all items in users cart
     try:
-        cart = Cart.objects.filter(customer_id=request.user.customer)
+        customer = Customer.objects.get(customer_id=request.user)
+        cart = Cart.objects.filter(customer_id=customer)
     except:
         return HttpResponse("Failed to find users cart.", status=404)
 

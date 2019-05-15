@@ -43,7 +43,7 @@ INSTALLED_APPS = [
     'accounts.apps.AccountsConfig',
     'cart.apps.CartConfig',
     'django_extensions',
-    # 'crispy_forms',
+    'crispy_forms',
 ]
 
 # AUTH_USER_MODEL = 'auth.User'
