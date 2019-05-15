@@ -1,31 +1,33 @@
 # DigitalSecurityHub
 INFO 441 project
 
+# Home: https://127.0.0.1:8000/home/
+
 # ERD
 ![ERD](https://github.com/vineethsai/DigitalSecurityHub/blob/quinn-a4-2/media/Project%20ERD.png)
 
 # API
 
-## Signup
+## Signup https://127.0.0.1:8000/accounts/signup
 - GET: Displays signup page
 - POST: Sends in singup parameters, logs user in and redirects to signup2 (creates USER in user model)
 
-## signup2
+## signup2 https://127.0.0.1:8000/accounts/signup2 (DO NOT USE THE LINK - FOLLOW PATH USING SIGNUP)
 - GET: displays signup2 page, depending on user type (seller vs customer) shows different page
 
-## vendor
+## vendor (internal link)
 - POST: sends the required details of seller to API(creates Seller/Company entry in models)
 - DELETE: Deltes the vendor from the database - can only be accessedd from user profile page
 
-## customer
+## customer (internal link)
 - POST: sends the required details of seller to API(creates customer entry in models)
 - DELETE: Deltes the vendor from the database - can only be accessedd from user profile page
 
-## signin
-- GET: Displays login page
+## signin https://127.0.0.1:8000/accounts/signin
+- GET: Displays login page if not logged in, else displays user profile
 - POST: Sends login credentials to user and redirects to profile page of the user (diaplys user information)
 
-## singout
+## singout https://127.0.0.1:8000/accounts/signout
 - GET: Signs out the user
 
 ## cart
