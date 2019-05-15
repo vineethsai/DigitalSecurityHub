@@ -59,7 +59,7 @@ def productReview(request, product_id):
             new_review = Review.objects.create(
                 review_text = json_post["review"],
                 rating = json_post["rating"],
-                customer_id = Customer.objects.get(customer_id=request.user.customer),
+                customer_id = Customer.objects.get(customer_id=request.user),
                 product_id = product
             )
         except:
