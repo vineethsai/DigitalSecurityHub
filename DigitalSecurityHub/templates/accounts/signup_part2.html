@@ -3,14 +3,14 @@
 {% block title %} Continue Sign up  {% endblock %}
 {% block content %}
 
-{% if type %}
+{% if type == '1' %}
     <form action="/accounts/vendor"  method="post">{% csrf_token %}
         {{ vendor_form_1|crispy }}
         {{ vendor_form_2|crispy }}
         <br><button type="submit" value="submit" onsubmit=" " class="btn btn-success">Submit</button>
     </form>
 
-{% elif type %}
+{% elif type == '0' %}
     <form action="/accounts/customer"  method="post">{% csrf_token %}
         {{ customer_form|crispy }}
         <br><button type="submit" value="submit" class="btn btn-success">Submit</button>

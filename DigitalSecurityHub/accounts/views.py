@@ -72,7 +72,7 @@ def signup2(request):
     :param request:
     :return:
     """
-    global user_type
+    # global user_type
     if request.method == 'GET':
         vendor_form_1 = CompanyForm()
         customer_form = CustomerForm()
@@ -149,18 +149,23 @@ def customer(request):
     """
     if request.method == 'POST':
         customer_form = CustomerForm(request.POST)
-        try:
-            # if form is valid, creates user
+        if request.user.is_authenticated:
+            # try:
+                # if form is valid, creates user
             if customer_form.is_valid():
                 Customer.objects.update_or_create(
+                    customer_id=request.user,
                     address=customer_form.cleaned_data['address'],
                     city=customer_form.cleaned_data['city'],
                     state=customer_form.cleaned_data['state'],
                     zip=customer_form.cleaned_data['zip'],
+                    type=user_type
                 )
-            return HttpResponse('Successfully Created')
-        except:
-            return HttpResponse("Oops something went wrong", status=500)
+            return HttpResponse('Successfully Created', status=200)
+            # except:
+            #     return HttpResponse("Oops something went wrong", status=500)
+        else:
+            return HttpResponse('Please log in', status=201)
     elif request.method == "DELETE":
         try:
             # if authenticated, deletes user
@@ -192,14 +197,17 @@ def signin(request):
     if request.method == "GET":
         if request.user.is_authenticated:
             user = request.user
-            return render(request
-                          , 'accounts/profile.html',
-                          # 'customer': Customer.objects.get(customer_id=request.user),
-                          # 'company': Company.objects.get(id=Seller.objects.get(seller_id=request.user).company_id),
-                          {'user': User.objects.get(id=request.user.id),
-                           'type': user_type})
-        form = SigninForm()
-        return render(request, "accounts/signin.html", {'form': form}, status=200)
+            try:
+                return render(request
+                              , 'accounts/profile.html',
+                              {'user': User.objects.get(id=request.user.id),
+                               'customer': Customer.objects.get(customer_id=request.user),
+                               'type': user_type})
+            except:
+                return HttpResponse("Oops something went wrong, Go back to home", status=500)
+        else:
+            form = SigninForm()
+            return render(request, "accounts/signin.html", {'form': form}, status=200)
     elif request.method == "POST":
         form = SigninForm(request.POST)
         try:

@@ -6,51 +6,52 @@
 <p> Customer Details</p>
 <hr>
 <p>
-    {{ user.username }}
+    username: {{ user.username }}
     <br>
-    {{ user.email }}
+    email: {{ user.email }}
     <br>
-    {{ user.first_name }}
+    First name: {{ user.first_name }}
     <br>
-    {{ user.last_name }}
+    Last name: {{ user.last_name }}
     <br>
 
     <hr>
-    {{ customer.address }}
+    Address: {{ customer.address }}
     <br>
-    {{ customer.city }}
+    City: {{ customer.city }}
     <br>
-    {{ customer.state }}
+    State: {{ customer.state }}
     <br>
-    {{ customer.zip }}
+    Zip Code: {{ customer.zip }}
     <br>
-    {{ customer.birth_date }}
-    <br>
-    {{ customer.type }}
-    <br>
+
 <hr>
     </p>
 {% else %}
 <p>Vendor Details</p>
+
 <p>
     <hr>
-    {{ user.username }}
-<br>
-    {{ user.email }}
-<br>
-    {{ user.first_name }}
-<br>
-    {{ user.last_name }}
+   username: {{ user.username }}
+    <br>
+    email: {{ user.email }}
+    <br>
+    First name: {{ user.first_name }}
+    <br>
+    Last name: {{ user.last_name }}
+    <br>
 <hr>
-    <p>Company details</p>
-    {{ company.name }}
-    {{ company.address }}
-    {{ company.city }}
-    {{ company.state }}
-    {{ company.zip }}
+    Company Address: {{ company.address }}
+    <br>
+    Company City: {{ company.city }}
+    <br>
+    CompanyState: {{ company.state }}
+    <br>
+    Company Zip Code: {{ company.zip }}
+    <br>
 </p>
 {% endif %}
-<hr>
+
 <br>
 <p>click here to view cart</p>
 <form action="/cart"  method="delete">{% csrf_token %}

@@ -15,7 +15,7 @@ class Customer(models.Model):
     city = models.CharField(max_length=100, default='Seattle')
     state = models.CharField(max_length=100, default='WA')
     zip = models.IntegerField(default=98105)
-    type = models.CharField(choices=RELEVANCE_CHOICES, max_length=2)
+    type = models.IntegerField(choices=RELEVANCE_CHOICES)
 
 
 class Company(models.Model):
