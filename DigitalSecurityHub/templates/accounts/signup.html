@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
 {% load crispy_forms_tags %}
-{% block title %} New post {% endblock %}
+{% block title %} Sign Up {% endblock %}
 {% block content %}
     <form action="/accounts/signup"  method="post">{% csrf_token %}
         {{ form|crispy }}

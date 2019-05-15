@@ -1,6 +1,6 @@
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
-from .forms import SignupForm, SigninForm, CompanyForm, SellerForm, CustomerForm
+from .forms import SignupForm, SigninForm, CompanyForm, CustomerForm, DeleteForm
 from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.views.decorators.debug import sensitive_post_parameters
@@ -48,11 +48,9 @@ def signup2(request):
         user = request.user
 
         vendor_form_1 = CompanyForm()
-        vendor_form_2 = SellerForm()
         customer_form = CustomerForm()
         return render(request, 'accounts/signup_part2.html',
                       {'vendor_form_1': vendor_form_1,
-                       'vendor_form_2': vendor_form_2,
                        'customer_form': customer_form,
                        'Customer': Customer.objects.get(customer_id=user)}, status=200)
     else:
@@ -61,22 +59,23 @@ def signup2(request):
 
 def vendor(request):
     if request.method == 'POST':
-        vendor_form_1 = SellerForm(request.POST)
+        vendor_form_1 = CompanyForm(request.POST)
         if vendor_form_1.is_valid():
-            company = Company.objects.create_or_update(
+            Company.objects.update_or_create(
                 name=vendor_form_1.cleaned_data["name"],
-                address=vendor_form_1.changed_data['address'],
-                city=vendor_form_1.changed_data['city'],
-                state=vendor_form_1.changed_data['state'],
-                zip=vendor_form_1.changed_data['zip']
+                address=vendor_form_1.cleaned_data['address'],
+                city=vendor_form_1.cleaned_data['city'],
+                state=vendor_form_1.cleaned_data['state'],
+                zip=vendor_form_1.cleaned_data['zip']
             )
-            vendor_form_2 = SellerForm(request.POST)
-            if vendor_form_2.is_valid():
-                Seller.objects.create_or_update(name=vendor_form_2.cleaned_data["name"],
-                                                seller_id=request.user
-                                                , birth_date=vendor_form_2.cleaned_data["birth_date"],
-                                                company_id=company)
-                return HttpResponse('Lit')
+            Seller.objects.update_or_create(name=vendor_form_1.cleaned_data["name"],
+                                            seller_id=request.user,
+                                            company_id=Company.objects.get(name=vendor_form_1.cleaned_data["name"]))
+        return HttpResponse('lit')
+    elif request.method == "DELETE":
+        form = DeleteForm(request.POST)
+        Seller.objects.get(seller_id=request.user).delete()
+        Company.objects.get(name=form["name"]).delete()
     else:
         return HttpResponse("Method not allowed on /accounts/register.", status=405)
 
@@ -88,12 +87,14 @@ def customer(request):
             Customer.objects.update_or_create(
                 customer_id=request.user,
                 # birth_date=customer_form.cleaned_data["birth_date"],
-                address=customer_form.changed_data['address'],
-                city=customer_form.changed_data['city'],
-                state=customer_form.changed_data['state'],
-                zip=customer_form.changed_data['zip'],
+                address=customer_form.cleaned_data['address'],
+                city=customer_form.cleaned_data['city'],
+                state=customer_form.cleaned_data['state'],
+                zip=customer_form.cleaned_data['zip'],
             )
         return HttpResponse('lit')
+    elif request.method == "DELETE":
+        Customer.objects.get(customer_id=request.user).delete()
     else:
         return HttpResponse("Method not allowed on /accounts/register.", status=405)
 
@@ -129,6 +130,7 @@ def signin(request):
                 return HttpResponse("Invalid credentials.", status=401)
         else:
             return HttpResponse("Bad sign in form.", status=400)
+
 
 
 @sensitive_post_parameters()
