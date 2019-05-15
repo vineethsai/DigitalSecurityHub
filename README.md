@@ -4,7 +4,7 @@ INFO 441 project
 # Home: https://127.0.0.1:8000/home/
 
 # ERD
-![ERD](https://github.com/vineethsai/DigitalSecurityHub/blob/quinn-a4-2/media/Project%20ERD.png)
+![ERD](https://github.com/vineethsai/DigitalSecurityHub/blob/master/media/Project%20ERD.png)
 
 # API
 
