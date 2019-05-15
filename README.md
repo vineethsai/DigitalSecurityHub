@@ -3,6 +3,10 @@ INFO 441 project
 
 # Home: https://127.0.0.1:8000/home/
 
+## Setup
+- Download crispy from by using this command:
+`pip install --upgrade django-crispy-forms`
+
 # ERD
 ![ERD](https://github.com/vineethsai/DigitalSecurityHub/blob/master/media/Project%20ERD.png)
 
