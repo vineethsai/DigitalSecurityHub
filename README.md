@@ -25,12 +25,14 @@ https://127.0.0.1:8000/accounts/signup2 (DO NOT USE THE LINK - FOLLOW PATH USING
 ## vendor 
 (internal link)
 - POST: sends the required details of seller to API(creates Seller/Company entry in models)
-- DELETE: Deltes the vendor from the database - can only be accessedd from user profile page
+- DELETE: Deletes the vendor from the database - can only be accessedd from user profile page/form provided
 
 ## customer 
 (internal link)
 - POST: sends the required details of seller to API(creates customer entry in models)
-- DELETE: Deltes the vendor from the database - can only be accessedd from user profile page
+- DELETE: Deletes the vendor from the database - can only be accessedd from user profile page/form provided
+
+**HTML 1.x does NOT support anything but GET and POST for forms, so DELETE and PATCH will NOT work on a browser**
 
 ## signin 
 https://127.0.0.1:8000/accounts/signin
