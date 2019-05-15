@@ -1,0 +1,53 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block title %} User Profile {% endblock %}
+{% block content %}
+{% if not user_type %}
+<p> Customer Details</p>
+<p>
+    {{ user.username }}
+    <br>
+    {{ user.email }}
+    <br>
+    {{ user.first_name }}
+    <br>
+    {{ user.last_name }}
+    <br>
+    {{ customer.address }}
+    <br>
+    {{ customer.city }}
+    <br>
+    {{ customer.state }}
+    <br>
+    {{ customer.zip }}
+    <br>
+    {{ customer.birth_date }}
+    <br>
+    {{ customer.type }}
+    <br>
+    </p>
+{% else %}
+<p>Vendor Details</p>
+<p>
+    {{ user.username }}
+    {{ user.email }}
+    {{ user.first_name }}
+    {{ user.last_name }}
+    <p>Company details</p>
+    {{ company.name }}
+    {{ company.address }}
+    {{ company.city }}
+    {{ company.state }}
+    {{ company.zip }}
+</p>
+{% endif %}
+
+
+<p> if you want to delete</p>
+    <form action="/accounts/customer"  method="delete">{% csrf_token %}
+        {{ form|crispy }}
+        <br><button type="submit" value="submit" class="btn btn-success">Submit</button>
+    </form>
+
+
+{% endblock %}

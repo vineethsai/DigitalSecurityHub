@@ -18,12 +18,22 @@ from django.urls import path, include
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+<<<<<<< HEAD
+    path('accounts/', include('accounts.urls')),
+    # path('auth/', include('auth.urls')),
+    # path('cart/', include('cart.urls')),
+=======
     # path('accounts/', include('accounts.urls')),
     path('auth/', include('auth.urls')),
     path('cart/', include('cart.urls')),
+>>>>>>> master
     # path('orders/', include('orders.urls')),
-    path('products/', include('products.urls')),
+    # path('products/', include('products.urls')),
     path('', include('main.urls')),
+<<<<<<< HEAD
+    # path('shop/', include('shop.urls'))
+=======
     path('main/', include('main.urls')),
     path('shop/', include('shop.urls'))
+>>>>>>> master
 ]

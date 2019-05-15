@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% load crispy_forms_tags %}
+{% block title %} Continue Sign up  {% endblock %}
+{% block content %}
+
+{% if type %}
+    <form action="/accounts/vendor"  method="post">{% csrf_token %}
+        {{ vendor_form_1|crispy }}
+        {{ vendor_form_2|crispy }}
+        <br><button type="submit" value="submit" onsubmit=" " class="btn btn-success">Submit</button>
+    </form>
+
+{% elif not type %}
+    <form action="/accounts/customer"  method="post">{% csrf_token %}
+        {{ customer_form|crispy }}
+        <br><button type="submit" value="submit" class="btn btn-success">Submit</button>
+    </form>
+{% endif %}
+{% endblock %}
