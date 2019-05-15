@@ -1,6 +1,5 @@
 from django.http import HttpResponse, HttpResponseRedirect
 from django.shortcuts import render
-from django.views.decorators.csrf import csrf_exempt
 from django.forms.models import model_to_dict
 from .forms import SignupForm, SigninForm, CompanyForm, CustomerForm, DeleteForm
 from django.contrib.auth import authenticate, login, logout
@@ -11,7 +10,6 @@ from .models import Customer, Seller, Company
 user_type = None
 
 
-@csrf_exempt
 @sensitive_post_parameters()
 def signup(request):
     """
@@ -55,9 +53,16 @@ def signup(request):
         return HttpResponse("Method not allowed on /accounts/register.", status=405)
 
 
-@csrf_exempt
 @sensitive_post_parameters()
 def signup2(request):
+    """
+    On "GET" request
+    Displays the registration form to the user. Sends HTTP status code 200 (OK).
+    Return a HTTP response with the message "Method not allowed on auth/register."
+    and HTTP status code 405 (Method Not Allowed)
+    :param request:
+    :return:
+    """
     if request.method == 'GET':
         vendor_form_1 = CompanyForm()
         customer_form = CustomerForm()
@@ -69,9 +74,18 @@ def signup2(request):
         return HttpResponse("Method not allowed on /accounts/register.", status=405)
 
 
-@csrf_exempt
 @sensitive_post_parameters()
 def vendor(request):
+    """
+    On a "POST" request
+    Will allow a user to register using a form and the built-in Django database model for a user.
+    On any other HTTP request method:
+    ON "DELETE" reguest, it deletes the vendor from the DB
+    Return a HTTP response with the message "Method not allowed on auth/register."
+    and HTTP status code 405 (Method Not Allowed)
+    :param request:
+    :return:
+    """
     if request.method == 'POST':
         if request.user.is_authenticated:
             try:
@@ -95,7 +109,7 @@ def vendor(request):
 
     elif request.method == 'DELETE':
         try:
-            form = DeleteForm(request.POST)
+            form = DeleteForm(request.DELETE)
             if request.user.is_authenticated:
                 Seller.objects.get(seller_id=request.user).delete()
                 Company.objects.get(name=form["name"]).delete()
@@ -105,9 +119,18 @@ def vendor(request):
         return HttpResponse("Method not allowed on /accounts/register.", status=405)
 
 
-@csrf_exempt
 @sensitive_post_parameters()
 def customer(request):
+    """
+    On a "POST" request
+    Will allow a user to register using a form and the built-in Django database model for a user.
+    On any other HTTP request method:
+    ON "DELETE" reguest, it deletes the vendor from the DB
+    Return a HTTP response with the message "Method not allowed on auth/register."
+    and HTTP status code 405 (Method Not Allowed)
+    :param request:
+    :return:
+    """
     if request.method == 'POST':
         customer_form = CustomerForm(request.POST)
         try:
@@ -134,7 +157,6 @@ def customer(request):
         return HttpResponse("Method not allowed on /accounts/customer.", status=405)
 
 
-@csrf_exempt
 @sensitive_post_parameters()
 def signin(request):
     """
@@ -142,8 +164,6 @@ def signin(request):
     On "GET" request
     Will show the user a form that they can use to signin. Sends HTTP status code 200 (OK).
     On a "POST" request
-    Allows the user to signin using a form and the built-in Django authentication framework by taking t
-    he user's username and password and returning a session cookie.
     On any other HTTP request method:
     Return a HTTP response with the message "Method not allowed on auth/signin." and HTTP status
     code 405 (Method Not Allowed)
@@ -183,7 +203,6 @@ def signin(request):
             return HttpResponse("Bad sign in form.", status=400)
 
 
-@csrf_exempt
 @sensitive_post_parameters()
 def signout(request):
     """
@@ -205,12 +224,14 @@ def signout(request):
     else:
         return HttpResponse("Method not allowed on accounts/signout.", status=405)
 
+
 # Create your views here.
 def output_user(user):
     """
     Returns output dict for user
     """
     return model_to_dict(user, fields=["id", "username", "first_name", "last_name", "email"])
+
 
 def output_customer(customer):
     """
@@ -225,6 +246,7 @@ def output_customer(customer):
         "Zip": customer.zip
     }
 
+
 def output_seller(seller):
     """
     Returns output dict for seller
@@ -233,6 +255,7 @@ def output_seller(seller):
         "User": output_user(seller.user),
         "Company": output_company(seller.company_id)
     }
+
 
 def output_company(company):
     """
