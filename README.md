@@ -4,6 +4,8 @@ INFO 441 project
 ## Setup
 Download crispy from by using this command:
 `pip install --upgrade django-crispy-forms`
+Please, migrate before running. CERT files have been included if using runserver_plus.
+runserver_plus included in INSTALLED_APPS, so please uncomment, if not installed on local machine
 
 # ERD
 ![ERD](https://github.com/vineethsai/DigitalSecurityHub/blob/master/media/Project%20ERD.png)
