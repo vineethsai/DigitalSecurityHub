@@ -30,7 +30,7 @@ def ProductList(request):
         return render(request, 'products/productList.html', {'object_list': product_list}, status=200)
     
     # Allows a vendor to add a new product
-    if request.method is 'POST' and request.user.is_authenticated and Customer.objects.get(customer_id=request.user).type:
+    if request.method == 'POST' and request.user.is_authenticated and Customer.objects.get(customer_id=request.user).type:
         try:
             json_post = json.loads(request.body)
             Product.objects.create(
@@ -43,9 +43,11 @@ def ProductList(request):
             return HttpResponse('Product added')
         except:
             return HttpResponse("Failed to add new product.", status=500)
+    else:
+        return HttpResponse("Not authorized", status=401)
 
     # Allows the current user to delete all products owned by them
-    if request.method is 'DELETE' and request.user.is_authenticated and Customer.objects.get(customer_id=request.user).type:
+    if request.method == 'DELETE' and request.user.is_authenticated and Customer.objects.get(customer_id=request.user).type:
         try:
             seller = Customer.objects.get(seller_id=request.user)
             product_list = Product.objects.get(seller_id=seller)  # <-- can you just put .delete() here to delet all products?
@@ -54,6 +56,11 @@ def ProductList(request):
             return HttpResponse('Product deleted')
         except:
             return HttpResponse("Failed to delete products.", status=500)
+    else:
+        return HttpResponse("Not authorized", status=401)
+
+    # Return 405 if any other method besides the ones specified above is tried
+    return HttpResponse('Method not allowed', status=405)
 
 
 def SpecificProduct(request, product_id):
@@ -65,7 +72,7 @@ def SpecificProduct(request, product_id):
     """
     
     # Returns product information for the specified product
-    if request.method is 'GET':
+    if request.method == 'GET':
         try:
             json_post = json.loads(request.body)
             product = output_product(Product.objects.get(id=product_id))  # <-- using output product to format it correctly
@@ -74,7 +81,7 @@ def SpecificProduct(request, product_id):
             return HttpResponse('Could not find product')
         
     # Should add the product to the cart of the authenticated user
-    if request.method is 'POST' and request.user.is_authenticated:
+    if request.method == 'POST' and request.user.is_authenticated:
         try:
             json_post = json.loads(request.body)
             product = Product.objects.get(id=product_id)  # <-- do not think we need to say which seller it is
@@ -82,9 +89,11 @@ def SpecificProduct(request, product_id):
             return HttpResponse('Product added')  # <-- product should be added to the current logged in user's cart
         except:
             return HttpResponse("Could not add product to cart.", status=500)
+    else:
+        return HttpResponse("Not authorized", status=401)
 
     # Allows seller to edit product information (if it is their product)
-    if request.method is 'PATCH' and request.user.is_authenticated and Customer.objects.get(customer_id=request.user).type:
+    if request.method == 'PATCH' and request.user.is_authenticated and Customer.objects.get(customer_id=request.user).type:
         try:
             json_post = json.loads(request.body)
             product = Product.objects.get(Q(id=product_id) & Q(seller_id=request.user))  # <-- should get the specified product of the current logged in seller
@@ -98,15 +107,20 @@ def SpecificProduct(request, product_id):
             return HttpResponse('Product updated')
         except:
             return HttpResponse('Product could not be updated')
+    else:
+        return HttpResponse("Not authorized", status=401)
 
     # Will delete the specified product if owned by the current seller
-    if request.method is 'DELETE' and request.user.is_authenticated:
+    if request.method == 'DELETE' and request.user.is_authenticated:
         if Customer.objects.get(customer_id=request.user).type:
             Product.objects.get(id=product_id).delete()
             return HttpResponse('Product deleted from store')
         else:
             return HttpResponse('You do not have the required permissions', type=401)
+    else:
+        return HttpResponse("Not authorized", status=401)
     
+    # Return 405 if any other method besides the ones specified above is tried
     return HttpResponse('Method not allowed', status=405)
 
 # def product_list_view(request):
