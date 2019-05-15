@@ -201,7 +201,6 @@ def signin(request):
                 return render(request
                               , 'accounts/profile.html',
                               {'user': User.objects.get(id=request.user.id),
-                               'customer': Customer.objects.get(customer_id=request.user),
                                'type': user_type})
             except:
                 return HttpResponse("Oops something went wrong, Go back to home", status=500)
