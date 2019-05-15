@@ -22,7 +22,7 @@ INFO 441 project
 - DELETE: Deltes the vendor from the database - can only be accessedd from user profile page
 
 ## signin
-- GET: Displays login page
+- GET: Displays login page if not logged in, else displays user profile
 - POST: Sends login credentials to user and redirects to profile page of the user (diaplys user information)
 
 ## singout
