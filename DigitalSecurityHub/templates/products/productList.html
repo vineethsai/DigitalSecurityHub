@@ -1,5 +1,12 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block content %}
+
 {% for obj in object_list %}
 
-{{ obj.title}} <br/>
+{{ obj.title }} <br/>
 
 {% endfor %}
+
+{% endblock %}

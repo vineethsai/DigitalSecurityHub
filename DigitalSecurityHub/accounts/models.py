@@ -30,8 +30,3 @@ class Seller(models.Model):
     name = models.CharField(max_length=100, default='')
     seller_id = models.OneToOneField(User, on_delete=models.CASCADE, primary_key=True)
     company_id = models.ForeignKey(Company, on_delete=models.CASCADE, default=1)
-
-
-
-
-

@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block head_title %}{{ review.customer_id.User.username }}'s Review{% endblock head_title %}
+
+{% block content %}
+<h1 class="descriptive-header">
+  {% if review.customer_id.User.first_name != "" %}
+  {{ review.customer_id.User.first_name }}
+  {{ review.customer_id.User.last_name }}
+  {% else %}
+  {{ review.customer_id.User.username}}
+  {% endif %}
+  said...
+</h1>
+<p class="review-body">{{ review.review_text }}</p>
+<p class="review-body">Giving a {{ review.rating }} star rating!<p>
+{% endblock %}
+
+{% block base_head %}
+<style>
+  .descriptive-header {
+    font-size: 1.2em;
+  }
+  .review-body {
+    font-size: 1.1em;
+  }
+</style>
+{% endblock base_head %}

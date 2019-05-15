@@ -1,0 +1,57 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block head_title %}All Reviews for {{ product.name }}{% endblock head_title %}
+
+{% block content %}
+<h1 class="main-header">Reviews for {{ product.name }}</h1>
+<p class="summary-rating">Average Rating: {{ avg_rating }}</p>
+  {% if review|length == 0 %}
+  <h2 class="review-poster">No reviews right now :(</h2>
+  {% endif %}
+  {% for review in reviews %}
+  <div class="review">
+  <h2 class="review-poster">
+    {% if review.customer_id.User.first_name != "" %}
+    {{ review.customer_id.User.first_name }}
+    {{ review.customer_id.User.last_name }}
+    {% else %}
+    {{ review.customer_id.User.username}}
+    {% endif %}
+    --
+  </h2>
+  <p class="review-body">{{ review.review_text }}</p>
+  <p class="review-body">{{ review.rating}} Stars</p>
+  <p class="date-posted">{{ review.date_posted }}</p>
+</div>
+  {% endfor %}
+{% endblock %}
+
+{% block base_head %}
+<style>
+  .review {
+    border: 1px solid black;
+    margin-bottom: 1em;
+  }
+  .main-header {
+    font-size: 2em;
+  }
+  .summary-rating {
+    font-size: 1.5em;
+  }
+  .review-poster {
+    font-size: 1.3em;
+    font-weight: bold;
+  }
+  .review-body {
+    font-size: 1em;
+    font-weight: 550;
+    margin: 0;
+  }
+  .date-posted {
+    font-size: .8em;
+    margin: 0;
+    color: grey;
+  }
+</style>
+{% endblock base_head %}
