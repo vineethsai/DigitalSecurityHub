@@ -7,6 +7,8 @@ from django.contrib.auth.models import User
 from django.views.decorators.debug import sensitive_post_parameters
 from .models import Customer, Seller, Company
 
+# for keeping type of user in track
+# customer vs vendor
 user_type = None
 
 
@@ -30,15 +32,19 @@ def signup(request):
             if form.cleaned_data["password"] != form.cleaned_data["password_conf"]:
                 return HttpResponse("Passwords did not match.", status=400)
             try:
+                # creates user
                 User.objects.create_user(username=form.cleaned_data["username"],
                                          email=form.cleaned_data["email"]
                                          , first_name=form.cleaned_data["first_name"],
                                          last_name=form.cleaned_data["last_name"],
                                          password=form.cleaned_data["password"])
                 user_type = form.cleaned_data['type']
-                user = authenticate(request, username=form.cleaned_data["username"], password=form.cleaned_data["password"])
+                # logs user in
+                user = authenticate(request, username=form.cleaned_data["username"],
+                                    password=form.cleaned_data["password"])
                 if user is not None:
                     login(request, user)
+                    # redirects to signup2
                     return HttpResponseRedirect("/accounts/signup2")
                 else:
                     return HttpResponse("Invalid credentials.", status=401)
@@ -66,6 +72,7 @@ def signup2(request):
     if request.method == 'GET':
         vendor_form_1 = CompanyForm()
         customer_form = CustomerForm()
+        # renders specific form
         return render(request, 'accounts/signup_part2.html',
                       {'vendor_form_1': vendor_form_1,
                        'customer_form': customer_form,
@@ -91,6 +98,7 @@ def vendor(request):
             try:
                 vendor_form_1 = CompanyForm(request.POST)
                 if vendor_form_1.is_valid():
+                    # creates company
                     Company.objects.update_or_create(
                         name=vendor_form_1.cleaned_data["name"],
                         address=vendor_form_1.cleaned_data['address'],
@@ -98,9 +106,11 @@ def vendor(request):
                         state=vendor_form_1.cleaned_data['state'],
                         zip=vendor_form_1.cleaned_data['zip']
                     )
+                    # creates seller
                     Seller.objects.update_or_create(name=vendor_form_1.cleaned_data["name"],
                                                     seller_id=request.user,
-                                                    company_id=Company.objects.get(name=vendor_form_1.cleaned_data["name"]))
+                                                    company_id=Company.objects.get(
+                                                        name=vendor_form_1.cleaned_data["name"]))
                 return HttpResponseRedirect('/home')
             except:
                 return HttpResponse("Oops something went wrong", status=500)
@@ -111,8 +121,10 @@ def vendor(request):
         try:
             form = DeleteForm(request.DELETE)
             if request.user.is_authenticated:
-                Seller.objects.get(seller_id=request.user).delete()
+                # since ON.delete is set to cascade, deleing user and company should delete the
+                # entry from all models
                 Company.objects.get(name=form["name"]).delete()
+                User.objects.get(id=request.user.id).delete()
         except:
             return HttpResponse("Oops something went wrong", status=500)
     else:
@@ -134,6 +146,7 @@ def customer(request):
     if request.method == 'POST':
         customer_form = CustomerForm(request.POST)
         try:
+            # if form is valid, creates user
             if customer_form.is_valid():
                 Customer.objects.update_or_create(
                     address=customer_form.cleaned_data['address'],
@@ -146,8 +159,9 @@ def customer(request):
             return HttpResponse("Oops something went wrong", status=500)
     elif request.method == "DELETE":
         try:
+            # if authenticated, deletes user
             if request.user.is_authenticated:
-                Customer.objects.get(customer_id=request.user).delete()
+                User.objects.get(id=request.user.id).delete()
                 return HttpResponse('Successfully Deleted')
             else:
                 return HttpResponse('Login to continue')
@@ -191,8 +205,6 @@ def signin(request):
                     login(request, user)
                     return render(request
                                   , 'accounts/profile.html',
-                      # 'customer': Customer.objects.get(customer_id=request.user),
-                      # 'company': Company.objects.get(id=Seller.objects.get(seller_id=request.user).company_id),
                                   {'user': User.objects.get(id=request.user.id),
                                    'type': user_type})
                 else:
@@ -216,6 +228,7 @@ def signout(request):
     :return: httpResponse
     """
     if request.method == "GET":
+        # checks a logs user out
         if request.user.is_authenticated:
             logout(request)
             return render(request, 'accounts/signout.html')
