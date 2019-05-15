@@ -56,7 +56,7 @@ def ProductList(request):
             return HttpResponse("Failed to delete products.", status=500)
 
 
-def SpecificProduct(request, quantity, product_id):
+def SpecificProduct(request, product_id):
     """
     GET: renders JSON of specific product
     POST: adds product to cart
@@ -78,7 +78,7 @@ def SpecificProduct(request, quantity, product_id):
         try:
             json_post = json.loads(request.body)
             product = Product.objects.get(id=product_id)  # <-- do not think we need to say which seller it is
-            Cart.object.create(product=product, quantity=quantity, customer_id=request.user)
+            Cart.object.create(product=product, quantity=json_post['quantity'], customer_id=request.user)
             return HttpResponse('Product added')  # <-- product should be added to the current logged in user's cart
         except:
             return HttpResponse("Could not add product to cart.", status=500)
