@@ -2,7 +2,7 @@ from django.contrib import admin
 from django.urls import path, include
 from . import views
 
-app_name = 'shop'
+app_name = 'cart'
 urlpatterns = [
     path('', views.cart, name='cart'),
 ]
