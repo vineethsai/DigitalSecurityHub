@@ -10,7 +10,7 @@
         <br><button type="submit" value="submit" onsubmit=" " class="btn btn-success">Submit</button>
     </form>
 
-{% elif not type %}
+{% elif type %}
     <form action="/accounts/customer"  method="post">{% csrf_token %}
         {{ customer_form|crispy }}
         <br><button type="submit" value="submit" class="btn btn-success">Submit</button>

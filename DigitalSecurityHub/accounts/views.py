@@ -6,10 +6,12 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib.auth.models import User
 from django.views.decorators.debug import sensitive_post_parameters
 from .models import Customer, Seller, Company
+from django.shortcuts import get_object_or_404
+
 
 # for keeping type of user in track
 # customer vs vendor
-user_type = None
+user_type = 0
 
 
 @sensitive_post_parameters()
@@ -27,6 +29,7 @@ def signup(request):
     :return: httpResponse
     """
     if request.method == "POST":
+        global user_type
         form = SignupForm(request.POST)
         if form.is_valid():
             if form.cleaned_data["password"] != form.cleaned_data["password_conf"]:
@@ -69,6 +72,7 @@ def signup2(request):
     :param request:
     :return:
     """
+    global user_type
     if request.method == 'GET':
         vendor_form_1 = CompanyForm()
         customer_form = CustomerForm()
@@ -184,8 +188,10 @@ def signin(request):
     :param request: request object
     :return: httpResponse
     """
+    global user_type
     if request.method == "GET":
         if request.user.is_authenticated:
+            user = request.user
             return render(request
                           , 'accounts/profile.html',
                           # 'customer': Customer.objects.get(customer_id=request.user),
