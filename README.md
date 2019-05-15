@@ -4,7 +4,7 @@ INFO 441 project
 # Home: https://127.0.0.1:8000/home/
 
 ## Setup
-- Download crispy from by using this command:
+Download crispy from by using this command:
 `pip install --upgrade django-crispy-forms`
 
 # ERD
@@ -36,7 +36,7 @@ INFO 441 project
 
 ## cart
 **/**
-- GET: Returns a JSON output of all items in the cart.
+- GET: Returns a JSON output of all items in the cart, if user exists and has a cart
 - POST: Will submit the current cart for a new order. This will not delete the current cart.
 - DELETE: Will delete the specified item from the cart. Requires a JSON input with an int "product_id" specified.
 ```json
