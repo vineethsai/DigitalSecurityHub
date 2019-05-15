@@ -217,12 +217,12 @@ def output_customer(customer):
     Returns output dict for customer
     """
     return {
-        "User": output_user(customer.user),
-        "BirthDate": customer.birth_date,
+        "User": output_user(customer.customer_id),
         "Address": customer.address,
         "City": customer.city,
         "State": customer.state,
-        "Zip": customer.zip
+        "Zip": customer.zip,
+        "Type": customer.type
     }
 
 def output_seller(seller):
@@ -230,7 +230,7 @@ def output_seller(seller):
     Returns output dict for seller
     """
     return {
-        "User": output_user(seller.user),
+        "User": output_user(seller.seller_id),
         "Company": output_company(seller.company_id)
     }
 

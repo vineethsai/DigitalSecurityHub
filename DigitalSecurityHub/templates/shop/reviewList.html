@@ -1,12 +1,12 @@
 {% extends "base.html" %}
 {% load static %}
 
-{% block head_title %}All Reviews for {{ product.name }}{% endblock head_title %}
+{% block title %}All Reviews for {{ product.name }}{% endblock title %}
 
 {% block content %}
 <h1 class="main-header">Reviews for {{ product.name }}</h1>
 <p class="summary-rating">Average Rating: {{ avg_rating }}</p>
-  {% if review|length == 0 %}
+  {% if not reviews %}
   <h2 class="review-poster">No reviews right now :(</h2>
   {% endif %}
   {% for review in reviews %}

@@ -10,9 +10,12 @@ from accounts.models import Customer
 from accounts.views import output_customer
 from products.models import Product
 from products.views import output_product
+from django.views.decorators.csrf import csrf_exempt
+
 
 
 # Create your views here.
+@csrf_exempt
 def cart(request):
     """
     Allows user to interact with their cart
@@ -22,7 +25,7 @@ def cart(request):
         OPTIONAL: delete quantity
     """
     # Verifies user is signed in.
-    if request.user.is_authenticated:
+    if not request.user.is_authenticated:
         return HttpResponse(status=401)
 
     # Attempts to get users all items in users cart
@@ -50,7 +53,7 @@ def cart(request):
         # Creates new order
         try:
             new_order = Order.objects.create(
-                customer_id = Customer.objects.get(user=request.user),
+                customer_id = Customer.objects.get(customer_id=request.user),
                 order_total = total
             )
         except:

@@ -5,8 +5,8 @@ from django.utils.translation import ugettext_lazy as _
 # Create your models here.
 class Product(models.Model):
     ACTIVE_CHOICES = (
-        (0, _('False')),
-        (1, _('True'))
+        (False, _('False')),
+        (True, _('True'))
     )
 
     title = models.CharField(max_length=120)
@@ -14,7 +14,7 @@ class Product(models.Model):
     price = models.DecimalField(decimal_places=2, max_digits=20, default=0.0)
     seller_id = models.ForeignKey(Seller, on_delete=models.CASCADE)
     stock = models.IntegerField(default=0)
-    active = models.CharField(choices=ACTIVE_CHOICES, max_length=1, default=0)
+    active = models.BooleanField(choices=ACTIVE_CHOICES, max_length=1, default=0)
 
     def __str__(self):
         return self.title
@@ -24,6 +24,6 @@ class Product(models.Model):
         return self.title
 
     def save(self, *args, **kwargs):
-        if price < 0:
+        if self.price < 0:
             return
         super().save(*args, **kwargs)

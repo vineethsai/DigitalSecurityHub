@@ -8,8 +8,11 @@ from products.models import Product
 from products.views import output_product
 from accounts.views import output_customer
 from accounts.models import Customer
+from django.views.decorators.csrf import csrf_exempt
+
 
 # Create your views here.
+@csrf_exempt
 def productReview(request, product_id):
     """
     Allows users to view and interact with specific products.
@@ -56,7 +59,7 @@ def productReview(request, product_id):
             new_review = Review.objects.create(
                 review_text = json_post["review"],
                 rating = json_post["rating"],
-                customer_id = Customer.objects.get(id=request.user.customer.id),
+                customer_id = Customer.objects.get(customer_id=request.user.customer),
                 product_id = product
             )
         except:
@@ -80,6 +83,7 @@ def productReview(request, product_id):
 
     return HttpResponse("Method not allowed on shop/" + product_id, status=405)
 
+@csrf_exempt
 def specificProductReview(request, review_id):
     """
     Allows user to interact with their review
@@ -98,7 +102,7 @@ def specificProductReview(request, review_id):
 
     # Verifies user is the owner of the review
     try:
-        if review.customer_id.id is not Customer.objects.get(user=request.user).id:
+        if review.customer_id.id is not Customer.objects.get(customer_id=request.user).id:
             return HttpResponse(status=403)
     except:
         return HttpResponse("Failed to find Customer.", status=404)
