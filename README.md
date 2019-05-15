@@ -66,3 +66,46 @@ Download crispy from by using this command:
 }
 ```
 - DELETE: If the user is the creator of the review then the message will be deleted.
+
+## products
+**/products**
+- GET: Will render a list of all products (just the titles)
+- POST: Allows an authorized, logged in vendor to add a new product, requires JSON input with title, description, price, stock, and whether it is currently active (true or false) in the store or not.
+```json
+{
+  "title": "some title",
+  "description": "a description",
+  "price": 2.0,
+  "stock": 5,
+  "active": "true"
+}
+```
+- DELETE: Allows the currently logged in vendor to delete all of their products
+
+**/products/<int:product_id>**
+- GET: Returns the information of a specific product 
+- POST: Adds the current product to a cart.
+- PATCH: Allows an authorized, logged in seller to edit the information of the specified product (as long as it is their product), takes json with title, description, price, stock, and active status
+```json
+{
+  "title": "some title",
+  "description": "a description",
+  "price": 2.0,
+  "stock": 5,
+  "active": "true"
+}
+```
+- DELETE: Allows the seller to delete just the specified item (if they own it and are logged in)
+
+## orders
+**/orders/<int:order_id>**
+- GET: Returns information about the specified order in json format.  User must be logged in and it must be their order.
+- DELETE: Allows the logged in user to delete/cancel their order (if it is their order)
+- PATCH: Allows the logged in user to edit the order if it is their order, they can only edit the date not the price, takes a json array.
+```json
+{
+  "order_date": "<some date>"
+}
+```
+
+
