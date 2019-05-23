@@ -250,7 +250,8 @@ def signout(request):
     else:
         return HttpResponse("Method not allowed on accounts/signout.", status=405)
 
-
+    
+# Helped fimctions by Quinn
 # Create your views here.
 def output_user(user):
     """
