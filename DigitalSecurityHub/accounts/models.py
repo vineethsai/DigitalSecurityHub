@@ -3,6 +3,7 @@ from django.contrib.auth.models import User
 
 from django.utils.translation import ugettext_lazy as _
 
+# All of the following are written by Vineeth Sai
 
 class Customer(models.Model):
     RELEVANCE_CHOICES = (
