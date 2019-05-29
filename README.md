@@ -12,6 +12,10 @@ runserver_plus included in INSTALLED_APPS, so please uncomment, if not installed
 
 # API
 
+-------
+
+Vineeth:
+--------
 ## Home
 https://127.0.0.1:8000/home/
 
@@ -44,6 +48,8 @@ https://127.0.0.1:8000/accounts/signin
 ## singout
 https://127.0.0.1:8000/accounts/signout
 - GET: Signs out the user
+
+-----
 
 ## cart
 Route: https://localhost:8000/cart/

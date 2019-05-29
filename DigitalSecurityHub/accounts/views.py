@@ -8,7 +8,7 @@ from django.views.decorators.debug import sensitive_post_parameters
 from .models import Customer, Seller, Company
 from django.shortcuts import get_object_or_404
 
-
+# All of the following views are written by Vineeth
 # for keeping type of user in track
 # customer vs vendor
 user_type = 0
@@ -250,7 +250,8 @@ def signout(request):
     else:
         return HttpResponse("Method not allowed on accounts/signout.", status=405)
 
-
+    
+# Helped fimctions by Quinn
 # Create your views here.
 def output_user(user):
     """
