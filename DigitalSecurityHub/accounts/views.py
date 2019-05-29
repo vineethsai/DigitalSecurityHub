@@ -150,20 +150,20 @@ def customer(request):
     if request.method == 'POST':
         customer_form = CustomerForm(request.POST)
         if request.user.is_authenticated:
-            # try:
+            try:
                 # if form is valid, creates user
-            if customer_form.is_valid():
-                Customer.objects.update_or_create(
-                    customer_id=request.user,
-                    address=customer_form.cleaned_data['address'],
-                    city=customer_form.cleaned_data['city'],
-                    state=customer_form.cleaned_data['state'],
-                    zip=customer_form.cleaned_data['zip'],
-                    type=user_type
-                )
-            return HttpResponse('Successfully Created', status=200)
-            # except:
-            #     return HttpResponse("Oops something went wrong", status=500)
+                if customer_form.is_valid():
+                    Customer.objects.update_or_create(
+                        customer_id=request.user,
+                        address=customer_form.cleaned_data['address'],
+                        city=customer_form.cleaned_data['city'],
+                        state=customer_form.cleaned_data['state'],
+                        zip=customer_form.cleaned_data['zip'],
+                        type=user_type
+                    )
+                return HttpResponse('Successfully Created', status=200)
+            except:
+                return HttpResponse("Oops something went wrong", status=500)
         else:
             return HttpResponse('Please log in', status=201)
     elif request.method == "DELETE":
