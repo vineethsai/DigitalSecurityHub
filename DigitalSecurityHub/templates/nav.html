@@ -16,37 +16,27 @@
 
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav ml-auto">
-
-          {% if user.is_authenticated %}
-            <li class="nav-item active">
-                <a class="nav-link" href="/home">Home <span class="sr-only">(current)</span></a>
+            <li class="nav-item {% if 'home' in request.path or '/' == request.path %}active{% endif %}">
+                <a class="nav-link" href="/home">Home</a>
               </li>
-              <li class="nav-item">
+              <li class="nav-item {% if 'Support' in request.path %}active{% endif %}">
                 <a class="nav-link" href="#">Support</a>
               </li>
-              <li class="nav-item" >
+              <li class="nav-item {% if 'contact' in request.path %}active{% endif %}">
                 <a class="nav-link"  href="/main/contact">Contact</a>
               </li>
-              <li class="nav-item" >
+          {% if user.is_authenticated %}
+              <li class="nav-item {% if 'signout' in request.path %}active{% endif %}" >
                 <a class="nav-link"  href="/accounts/signout">Logout</a>
               </li>
-                <li class="nav-item" >
+                <li class="nav-item {% if 'signin' in request.path %}active{% endif %}"" >
                 <a class="nav-link"  href="/accounts/signin">Profile</a>
               </li>
           {% else %}
-              <li class="nav-item active">
-                <a class="nav-link" href="/home">Home <span class="sr-only">(current)</span></a>
-              </li>
-              <li class="nav-item">
-                <a class="nav-link" href="#">Support</a>
-              </li>
-              <li class="nav-item" >
-                <a class="nav-link"  href="/main/contact">Contact</a>
-              </li>
-              <li class="nav-item" >
+              <li class="nav-item {% if 'signin' in request.path %}active{% endif %}"" >
                 <a class="nav-link"  href="/accounts/signin">Login</a>
               </li>
-              <li class="nav-item" >
+              <li class="nav-item {% if 'signup' in request.path %}active{% endif %}"" >
                 <a class="nav-link"  href="/accounts/signup">Register</a>
               </li>
           {% endif %}

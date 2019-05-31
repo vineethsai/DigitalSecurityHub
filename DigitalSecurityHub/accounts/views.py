@@ -216,10 +216,7 @@ def signin(request):
                 user = authenticate(request, username=username, password=password)
                 if user is not None:
                     login(request, user)
-                    return render(request
-                                  , 'accounts/profile.html',
-                                  {'user': User.objects.get(id=request.user.id),
-                                   'type': user_type})
+                    return HttpResponseRedirect("/home")
                 else:
                     return HttpResponse("Invalid credentials.", status=401)
         except:
@@ -244,13 +241,13 @@ def signout(request):
         # checks a logs user out
         if request.user.is_authenticated:
             logout(request)
-            return render(request, 'accounts/signout.html')
+            return HttpResponseRedirect("/home")
         else:
             return HttpResponse("Not logged in.", status=200)
     else:
         return HttpResponse("Method not allowed on accounts/signout.", status=405)
 
-    
+
 # Helped fimctions by Quinn
 # Create your views here.
 def output_user(user):
