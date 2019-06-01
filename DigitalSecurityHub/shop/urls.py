@@ -10,5 +10,6 @@ urlpatterns = [
         'review/<int:review_id>',
         views.specificProductReview,
         name='specificProductReview'
-    )
+    ),
+    path('', views.shop, name='shopMain')
 ]

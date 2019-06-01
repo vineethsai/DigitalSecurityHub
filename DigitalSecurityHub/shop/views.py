@@ -12,6 +12,17 @@ from django.views.decorators.csrf import csrf_exempt
 
 
 # Create your views here.
+def shop(request):
+    """
+    Displays the shop for users to browse.
+    GET: Renders items in the shop.
+    """
+    if request.method == "GET":
+        return render(request, "shop/shop.html", {
+            "products": Product.objects.all()
+        })
+    return HttpResponse("Method not allowed on shop/" + product_id, status=405)
+
 @csrf_exempt
 def productReview(request, product_id):
     """
