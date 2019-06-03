@@ -4,10 +4,11 @@ from .forms import ContactForm
 from .models import ContactMessage
 
 def home(request):
-    return render(request, "base.html")
+    return render(request, "index.html")
 
 
 def contact(request):
+    return
     if request.method == 'GET':
         return render(request, "main/contact.html", {'form': ContactForm})
     elif request.method == 'POST':

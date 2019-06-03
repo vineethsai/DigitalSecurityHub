@@ -15,6 +15,7 @@ class Product(models.Model):
     seller_id = models.ForeignKey(Seller, on_delete=models.CASCADE)
     stock = models.IntegerField(default=0)
     active = models.BooleanField(choices=ACTIVE_CHOICES, max_length=1, default=0)
+    category = models.CharField(max_length=120)
 
     def __str__(self):
         return self.title

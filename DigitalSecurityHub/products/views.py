@@ -35,6 +35,7 @@ def ProductList(request):
                 price = json_post['price'],
                 stock = json_post['stock'],
                 active = json_post['active'],
+                category = json_post['category'],
                 seller_id = Seller.objects.get(seller_id=request.user),
             )
             return HttpResponse('Product added')

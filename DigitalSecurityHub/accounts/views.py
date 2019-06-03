@@ -161,7 +161,7 @@ def customer(request):
                         zip=customer_form.cleaned_data['zip'],
                         type=user_type
                     )
-                return HttpResponse('Successfully Created', status=200)
+                return HttpResponseRedirect('/home')
             except:
                 return HttpResponse("Oops something went wrong", status=500)
         else:
@@ -198,12 +198,18 @@ def signin(request):
         if request.user.is_authenticated:
             user = request.user
             try:
+                seller = Seller.objects.get(seller_id=request.user)
                 return render(request
-                              , 'accounts/profile.html',
-                              {'user': User.objects.get(id=request.user.id),
-                               'type': user_type})
+                                , 'accounts/profile.html',
+                                {'user': User.objects.get(id=request.user.id),
+                                'data': seller.company_id,
+                                'user_type': "Company"})
             except:
-                return HttpResponse("Oops something went wrong, Go back to home", status=500)
+                return render(request
+                                , 'accounts/profile.html',
+                                {'user': User.objects.get(id=request.user.id),
+                                'data': Customer.objects.get(customer_id=request.user),
+                                'user_type': "Customer"})
         else:
             form = SigninForm()
             return render(request, "accounts/signin.html", {'form': form}, status=200)
@@ -216,10 +222,7 @@ def signin(request):
                 user = authenticate(request, username=username, password=password)
                 if user is not None:
                     login(request, user)
-                    return render(request
-                                  , 'accounts/profile.html',
-                                  {'user': User.objects.get(id=request.user.id),
-                                   'type': user_type})
+                    return HttpResponseRedirect("/home")
                 else:
                     return HttpResponse("Invalid credentials.", status=401)
         except:
@@ -244,13 +247,13 @@ def signout(request):
         # checks a logs user out
         if request.user.is_authenticated:
             logout(request)
-            return render(request, 'accounts/signout.html')
+            return HttpResponseRedirect("/home")
         else:
             return HttpResponse("Not logged in.", status=200)
     else:
         return HttpResponse("Method not allowed on accounts/signout.", status=405)
 
-    
+
 # Helped fimctions by Quinn
 # Create your views here.
 def output_user(user):
