@@ -49,57 +49,30 @@
                           <label id="lastname">{{ user.last_name }}</label>
                         </div>
                       </div>
-                      {% if not user_type %}
                       <div class="form-group row">
-                        <label for="address" class="col-4 col-form-label">Company Address:</label>
+                        <label for="address" class="col-4 col-form-label">{{ user_type }} Address:</label>
                         <div class="col-8">
-                          <label id="address">{{ customer.address }}</label>
+                          <label id="address">{{ data.address }}</label>
                         </div>
                       </div>
                       <div class="form-group row">
-                        <label for="city" class="col-4 col-form-label">Company City:</label>
+                        <label for="city" class="col-4 col-form-label">{{ user_type }} City:</label>
                         <div class="col-8">
-                          <label id="city">{{ customer.city }}</label>
+                          <label id="city">{{ data.city }}</label>
                         </div>
                       </div>
                       <div class="form-group row">
-                        <label for="state" class="col-4 col-form-label">Company State:</label>
+                        <label for="state" class="col-4 col-form-label">{{ user_type }} State:</label>
                         <div class="col-8">
-                          <label id="state">{{ customer.state }}</label>
+                          <label id="state">{{ data.state }}</label>
                         </div>
                       </div>
                       <div class="form-group row">
-                        <label for="zip" class="col-4 col-form-label">Company ZIP:</label>
+                        <label for="zip" class="col-4 col-form-label">{{ user_type }} ZIP:</label>
                         <div class="col-8">
-                          <label id="zip">{{ customer.zip }}</label>
+                          <label id="zip">{{ data.zip }}</label>
                         </div>
                       </div>
-                      {% else %}
-                      <div class="form-group row">
-                        <label for="address" class="col-4 col-form-label">Company Address:</label>
-                        <div class="col-8">
-                          <label id="address">{{ company.address }}</label>
-                        </div>
-                      </div>
-                      <div class="form-group row">
-                        <label for="city" class="col-4 col-form-label">Company City:</label>
-                        <div class="col-8">
-                          <label id="city">{{ company.city }}</label>
-                        </div>
-                      </div>
-                      <div class="form-group row">
-                        <label for="state" class="col-4 col-form-label">Company State:</label>
-                        <div class="col-8">
-                          <label id="state">{{ company.state }}</label>
-                        </div>
-                      </div>
-                      <div class="form-group row">
-                        <label for="zip" class="col-4 col-form-label">Company ZIP:</label>
-                        <div class="col-8">
-                          <label id="zip">{{ company.zip }}</label>
-                        </div>
-                      </div>
-                      {% endif %}
 		                </div>
 		            </div>
 

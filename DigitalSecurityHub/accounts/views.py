@@ -161,7 +161,7 @@ def customer(request):
                         zip=customer_form.cleaned_data['zip'],
                         type=user_type
                     )
-                return HttpResponse('Successfully Created', status=200)
+                return HttpResponseRedirect('/home')
             except:
                 return HttpResponse("Oops something went wrong", status=500)
         else:
@@ -198,12 +198,18 @@ def signin(request):
         if request.user.is_authenticated:
             user = request.user
             try:
+                seller = Seller.objects.get(seller_id=request.user)
                 return render(request
-                              , 'accounts/profile.html',
-                              {'user': User.objects.get(id=request.user.id),
-                               'type': user_type})
+                                , 'accounts/profile.html',
+                                {'user': User.objects.get(id=request.user.id),
+                                'data': seller.company_id,
+                                'user_type': "Company"})
             except:
-                return HttpResponse("Oops something went wrong, Go back to home", status=500)
+                return render(request
+                                , 'accounts/profile.html',
+                                {'user': User.objects.get(id=request.user.id),
+                                'data': Customer.objects.get(customer_id=request.user),
+                                'user_type': "Customer"})
         else:
             form = SigninForm()
             return render(request, "accounts/signin.html", {'form': form}, status=200)

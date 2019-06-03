@@ -8,6 +8,7 @@ def home(request):
 
 
 def contact(request):
+    return
     if request.method == 'GET':
         return render(request, "main/contact.html", {'form': ContactForm})
     elif request.method == 'POST':
