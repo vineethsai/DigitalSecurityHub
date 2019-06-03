@@ -7,7 +7,11 @@
       "price": 0,
       "active": true,
       "stock": 42,
+<<<<<<< HEAD
       "seller_id": 2
+=======
+      "seller_id": 5
+>>>>>>> master
     },
     {
       "title": "Network-based Firewall",
@@ -16,16 +20,27 @@
       "price": 0,
       "active": true,
       "stock": 70,
+<<<<<<< HEAD
       "seller_id": 2
+=======
+      "seller_id": 5
+>>>>>>> master
     },
     {
       "title": "Premises-based Firewall",
       "description": "Fully managed solution designed to help defend against unauthorized connections to your LANs",
       "category": "Protect and Prevent",
+<<<<<<< HEAD
       "price": 202.0,
       "active": true,
       "stock": 27,
       "seller_id": 2
+=======
+      "price": 501.0,
+      "active": true,
+      "stock": 57,
+      "seller_id": 5
+>>>>>>> master
     },
     {
       "title": "DDoS Defense",
@@ -34,16 +49,27 @@
       "price": 98.0,
       "active": true,
       "stock": 90,
+<<<<<<< HEAD
       "seller_id": 2
+=======
+      "seller_id": 5
+>>>>>>> master
     },
     {
       "title": "Secure Email Gateway",
       "description": "Helps block spam, viruses, and other inbound email threats before they reach your network",
       "category": "Protect and Prevent",
+<<<<<<< HEAD
       "price": 2.32,
       "active": true,
       "stock": 82,
       "seller_id": 2
+=======
+      "price": 1.35,
+      "active": true,
+      "stock": 82,
+      "seller_id": 5
+>>>>>>> master
     },
     {
       "title": "Cloud Web Security Service",
@@ -51,8 +77,13 @@
       "category": "Protect and Prevent",
       "price": 3.0,
       "active": true,
+<<<<<<< HEAD
       "stock": 82,
       "seller_id": 2
+=======
+      "stock": 81,
+      "seller_id": 5
+>>>>>>> master
     },
     {
       "title": "Token Authentication",
@@ -61,7 +92,11 @@
       "price": 0,
       "active": true,
       "stock": 90,
+<<<<<<< HEAD
       "seller_id": 2
+=======
+      "seller_id": 5
+>>>>>>> master
     },
     {
       "title": "Enhanced Cybersecurity Service",
@@ -70,7 +105,11 @@
       "price": 0,
       "active": true,
       "stock": 70,
+<<<<<<< HEAD
       "seller_id": 2
+=======
+      "seller_id": 5
+>>>>>>> master
     },
     {
       "title": "Symantec",
@@ -79,16 +118,27 @@
       "price": 8.0,
       "active": true,
       "stock": 28,
+<<<<<<< HEAD
       "seller_id": 2
+=======
+      "seller_id": 5
+>>>>>>> master
     },
     {
       "title": "Norton",
       "description": "Helps defend small business against dangerous online threats",
       "category": "Protect and Prevent",
+<<<<<<< HEAD
       "price": 2.0,
       "active": true,
       "stock": 28,
       "seller_id": 2
+=======
+      "price": 5.0,
+      "active": true,
+      "stock": 18,
+      "seller_id": 5
+>>>>>>> master
     },
     {
       "title": "Lookout",
@@ -97,7 +147,11 @@
       "price": 0,
       "active": true,
       "stock": 63,
+<<<<<<< HEAD
       "seller_id": 2
+=======
+      "seller_id": 5
+>>>>>>> master
     },
     {
       "title": "IBM MaaS360",
@@ -106,7 +160,11 @@
       "price": 0,
       "active": true,
       "stock": 96,
+<<<<<<< HEAD
       "seller_id": 2
+=======
+      "seller_id": 5
+>>>>>>> master
     },
     {
       "title": "MobileIron",
@@ -114,8 +172,13 @@
       "category": "Protect and Prevent",
       "price": 0,
       "active": true,
+<<<<<<< HEAD
       "stock": 72,
       "seller_id": 2
+=======
+      "stock": 75,
+      "seller_id": 5
+>>>>>>> master
     },
     {
       "title": "VMware",
@@ -124,7 +187,11 @@
       "price": 0,
       "active": true,
       "stock": 82,
+<<<<<<< HEAD
       "seller_id": 2
+=======
+      "seller_id": 5
+>>>>>>> master
     },
     {
       "title": "AT&T Application Layer Security",
@@ -133,25 +200,43 @@
       "price": 800.0,
       "active": true,
       "stock": 20,
+<<<<<<< HEAD
       "seller_id": 2
     },
     {
       "title": "AlienVault\u00ae USM Anywhere\u2222",
+=======
+      "seller_id": 5
+    },
+    {
+      "title": "AlienVault\u00ae USM Anywhere\u2122",
+>>>>>>> master
       "description": "Puts the power of cybersecurity monitoring in your hands",
       "category": "Detect and Respond",
       "price": 0,
       "active": true,
       "stock": 48,
+<<<<<<< HEAD
       "seller_id": 2
+=======
+      "seller_id": 5
+>>>>>>> master
     },
     {
       "title": "AT&T Threat Manager",
       "description": "Gives you access to teams of cybersecurity experts who evaluate, research, and recommend action",
       "category": "Detect and Respond",
+<<<<<<< HEAD
       "price": 24992.0,
       "active": true,
       "stock": 64,
       "seller_id": 2
+=======
+      "price": 14995.0,
+      "active": true,
+      "stock": 64,
+      "seller_id": 5
+>>>>>>> master
     },
     {
       "title": "Incident Response and Forensics",
@@ -160,7 +245,11 @@
       "price": 0,
       "active": true,
       "stock": 84,
+<<<<<<< HEAD
       "seller_id": 2
+=======
+      "seller_id": 5
+>>>>>>> master
     },
     {
       "title": "Strategy and roadmap planning",
@@ -169,7 +258,11 @@
       "price": 0,
       "active": true,
       "stock": 9,
+<<<<<<< HEAD
       "seller_id": 2
+=======
+      "seller_id": 5
+>>>>>>> master
     },
     {
       "title": "Compliance consulting",
@@ -178,7 +271,11 @@
       "price": 0,
       "active": true,
       "stock": 27,
+<<<<<<< HEAD
       "seller_id": 2
+=======
+      "seller_id": 5
+>>>>>>> master
     },
     {
       "title": "Vulnerability scanning",
@@ -186,6 +283,7 @@
       "category": "Assess and Plan",
       "price": 0,
       "active": true,
+<<<<<<< HEAD
       "stock": 23,
       "seller_id": 2
     },
@@ -197,6 +295,19 @@
       "active": true,
       "stock": 22,
       "seller_id": 2
+=======
+      "stock": 53,
+      "seller_id": 5
+    },
+    {
+      "title": "Cybersecurity rating",
+      "description": "Measure your organization\u2019s cybersecurity performance with a daily rating based on our analysis",
+      "category": "Assess and Plan",
+      "price": 49.0,
+      "active": true,
+      "stock": 12,
+      "seller_id": 5
+>>>>>>> master
     }
   ]
 }
