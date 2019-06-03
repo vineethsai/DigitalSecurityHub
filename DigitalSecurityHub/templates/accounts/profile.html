@@ -1,69 +1,111 @@
 {% extends 'base.html' %}
 {% load crispy_forms_tags %}
 {% block title %} User Profile {% endblock %}
+
+<!-- Template created by jeevan123456 https://bootsnipp.com/snippets/bx5Be -->
 {% block content %}
-{% if not user_type %}
-<p> Customer Details</p>
-<hr>
-<p>
-    username: {{ user.username }}
-    <br>
-    email: {{ user.email }}
-    <br>
-    First name: {{ user.first_name }}
-    <br>
-    Last name: {{ user.last_name }}
-    <br>
+<div class="container">
+	<div class="row">
+		<div class="col-md-3 ">
+		     <div class="list-group ">
+            <a href="/accounts/signin" class="list-group-item list-group-item-action active">Profile</a>
+            <a href="/cart" class="list-group-item list-group-item-action">Cart</a>
+            <a href="#" class="list-group-item list-group-item-action">Orders</a>
+            <a href="#" class="list-group-item list-group-item-action">Delete Account</a>
+          </div>
+		</div>
+		<div class="col-md-9">
+		    <div class="card">
+		        <div class="card-body">
+		            <div class="row">
+		                <div class="col-md-12">
+		                    <h4>Your Profile</h4>
+		                    <hr>
+		                </div>
+		            </div>
+		            <div class="row">
+		                <div class="col-md-12">
+                      <div class="form-group row">
+                        <label for="username" class="col-4 col-form-label">User Name:</label>
+                        <div class="col-8">
+                          <label id="username">{{ user.username }}</label>
+                        </div>
+                      </div>
+                      <div class="form-group row">
+                        <label for="email" class="col-4 col-form-label">Email:</label>
+                        <div class="col-8">
+                          <label id="email">{{ user.email }}</label>
+                        </div>
+                      </div>
+                      <div class="form-group row">
+                        <label for="firstname" class="col-4 col-form-label">First Name:</label>
+                        <div class="col-8">
+                          <label id="firstname">{{ user.first_name }}</label>
+                        </div>
+                      </div>
+                      <div class="form-group row">
+                        <label for="lastname" class="col-4 col-form-label">Last Name:</label>
+                        <div class="col-8">
+                          <label id="lastname">{{ user.last_name }}</label>
+                        </div>
+                      </div>
+                      {% if not user_type %}
+                      <div class="form-group row">
+                        <label for="address" class="col-4 col-form-label">Company Address:</label>
+                        <div class="col-8">
+                          <label id="address">{{ customer.address }}</label>
+                        </div>
+                      </div>
+                      <div class="form-group row">
+                        <label for="city" class="col-4 col-form-label">Company City:</label>
+                        <div class="col-8">
+                          <label id="city">{{ customer.city }}</label>
+                        </div>
+                      </div>
+                      <div class="form-group row">
+                        <label for="state" class="col-4 col-form-label">Company State:</label>
+                        <div class="col-8">
+                          <label id="state">{{ customer.state }}</label>
+                        </div>
+                      </div>
+                      <div class="form-group row">
+                        <label for="zip" class="col-4 col-form-label">Company ZIP:</label>
+                        <div class="col-8">
+                          <label id="zip">{{ customer.zip }}</label>
+                        </div>
+                      </div>
+                      {% else %}
+                      <div class="form-group row">
+                        <label for="address" class="col-4 col-form-label">Company Address:</label>
+                        <div class="col-8">
+                          <label id="address">{{ company.address }}</label>
+                        </div>
+                      </div>
+                      <div class="form-group row">
+                        <label for="city" class="col-4 col-form-label">Company City:</label>
+                        <div class="col-8">
+                          <label id="city">{{ company.city }}</label>
+                        </div>
+                      </div>
+                      <div class="form-group row">
+                        <label for="state" class="col-4 col-form-label">Company State:</label>
+                        <div class="col-8">
+                          <label id="state">{{ company.state }}</label>
+                        </div>
+                      </div>
+                      <div class="form-group row">
+                        <label for="zip" class="col-4 col-form-label">Company ZIP:</label>
+                        <div class="col-8">
+                          <label id="zip">{{ company.zip }}</label>
+                        </div>
+                      </div>
+                      {% endif %}
+		                </div>
+		            </div>
 
-    <hr>
-    Address: {{ customer.address }}
-    <br>
-    City: {{ customer.city }}
-    <br>
-    State: {{ customer.state }}
-    <br>
-    Zip Code: {{ customer.zip }}
-    <br>
-
-<hr>
-    </p>
-{% else %}
-<p>Vendor Details</p>
-
-<p>
-    <hr>
-   username: {{ user.username }}
-    <br>
-    email: {{ user.email }}
-    <br>
-    First name: {{ user.first_name }}
-    <br>
-    Last name: {{ user.last_name }}
-    <br>
-<hr>
-    Company Address: {{ company.address }}
-    <br>
-    Company City: {{ company.city }}
-    <br>
-    CompanyState: {{ company.state }}
-    <br>
-    Company Zip Code: {{ company.zip }}
-    <br>
-</p>
-{% endif %}
-
-<br>
-<p>click here to view cart</p>
-<form action="/cart"  method="delete">{% csrf_token %}
-        <br><button type="submit" value="submit" class="btn btn-success">Submit</button>
-    </form>
-<br>
-<hr>
-<p> if you want to delete</p>
-    <form action="/accounts/customer"  method="delete">{% csrf_token %}
-        {{ form|crispy }}
-        <br><button type="submit" value="submit" class="btn btn-success">Submit</button>
-    </form>
-
-
+		        </div>
+		    </div>
+		</div>
+	</div>
+</div>
 {% endblock %}

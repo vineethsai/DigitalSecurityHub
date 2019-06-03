@@ -39,17 +39,22 @@ def cart(request):
     except:
         return HttpResponse("Cart not found.", status=404)
 
-    if cart.count() is 0:
-        return HttpResponse("Cart empty. Add some items.", status=200)
-
     if request.method == "GET":
         cart_list = []
+        total_cost = 0
 
         # Compiles list of all items in cart
         for item in cart:
-            cart_list.append(output_cart(item))
+            output_base = output_cart(item)
+            output_base["product_id"] = item.product_id.id
+            cart_list.append(output_base)
+            total_cost += item.quantity * item.product_id.price
 
         # Returns json serialized message
+        return render(request, 'cart/cart.html', {
+            "cart_items": cart_list,
+            "total": total_cost
+        })
         return JsonResponse(cart_list, safe=False)
 
     if request.method == "POST":

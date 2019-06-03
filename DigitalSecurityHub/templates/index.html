@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+  <!-- Buisness Header -->
+  <header class="bg-primary py-5 mb-5">
+    <div class="container h-100">
+      <div class="row h-100 align-items-center">
+        <div class="col-lg-12">
+          <h1 class="display-4 text-white mt-5 mb-2">Digital Security Hub</h1>
+          <p class="lead mb-5 text-white-50">Finding products so you don't have to!</p>
+        </div>
+      </div>
+    </div>
+  </header>
+  <!-- Page Content -->
+  <div class="container">
+
+    <div class="row">
+      <div class="col-md-8 mb-5">
+        <h2>What We Do</h2>
+        <hr>
+        <p>Digital Security Hub is a centralized marketplace to find and test professional security applications and tools. We understand the difficulty and time commitment to find the tools that are just right for your use case so we developed a market to quickly find and analyze applications for numerous use cases.</p>
+        <p>Happy shopping!</p>
+        <a class="btn btn-primary btn-lg" href="/shop">Start Shopping &raquo;</a>
+      </div>
+      <div class="col-md-4 mb-5">
+        <h2>Contact Us</h2>
+        <hr>
+        <address>
+          <strong>University of Washington</strong>
+          <br>1851 NE Grant Ln
+          <br>Seattle, WA 98105
+          <br>
+        </address>
+        <address>
+          <abbr title="Phone">P:</abbr>
+          (123) 456-7890
+          <br>
+          <abbr title="Email">E:</abbr>
+          <a href="mailto:#">digitatlsecurityhub@example.com</a>
+        </address>
+      </div>
+    </div>
+    <!-- /.row -->
+
+    <div class="row">
+      {% for product in products %}
+      <div class="col-md-4 mb-5">
+        <div class="card h-100">
+          <img class="card-img-top" src="http://placehold.it/300x200" alt="">
+          <div class="card-body">
+            <h4 class="card-title">{{product.title}}</h4>
+            <p class="card-text">{{product.description}}</p>
+          </div>
+          <div class="card-footer">
+            <a href="/products/{{product.id}}" class="btn btn-primary">View Now!</a>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+{% endblock %}
