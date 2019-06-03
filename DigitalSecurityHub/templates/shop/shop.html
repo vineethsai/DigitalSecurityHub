@@ -57,10 +57,13 @@
 <script>
 var enableNotif = true;
 function addToCart(productId) {
+  // Assemble AJAX request
   var xhr = new XMLHttpRequest();
   xhr.open("POST", "https://" + window.location.host + "/products/" + productId, true);
   xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
   xhr.send();
+
+  // Handle error handling
   enableNotif = false;
   xhr.onreadystatechange = function () {
     if (enableNotif === false) {
@@ -95,6 +98,10 @@ function addToCart(productId) {
   text-align:
   center;
   z-index: 10;
+}
+
+.btn {
+  width: 100%;
 }
 </style>
 {% endblock %}

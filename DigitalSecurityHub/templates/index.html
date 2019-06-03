@@ -44,45 +44,20 @@
     <!-- /.row -->
 
     <div class="row">
+      {% for product in products %}
       <div class="col-md-4 mb-5">
         <div class="card h-100">
           <img class="card-img-top" src="http://placehold.it/300x200" alt="">
           <div class="card-body">
-            <h4 class="card-title">Popular item</h4>
-            <p class="card-text">DESCRIPTION TEXT HERE</p>
+            <h4 class="card-title">{{product.title}}</h4>
+            <p class="card-text">{{product.description}}</p>
           </div>
           <div class="card-footer">
-            <a href="/products/1" class="btn btn-primary">View Now!</a>
+            <a href="/products/{{product.id}}" class="btn btn-primary">View Now!</a>
           </div>
         </div>
       </div>
-      <div class="col-md-4 mb-5">
-        <div class="card h-100">
-          <img class="card-img-top" src="http://placehold.it/300x200" alt="">
-          <div class="card-body">
-            <h4 class="card-title">Popular item</h4>
-            <p class="card-text">DESCRIPTION TEXT HERE</p>
-          </div>
-          <div class="card-footer">
-            <a href="/products/2" class="btn btn-primary">View Now!</a>
-          </div>
-        </div>
-      </div>
-      <div class="col-md-4 mb-5">
-        <div class="card h-100">
-          <img class="card-img-top" src="http://placehold.it/300x200" alt="">
-          <div class="card-body">
-            <h4 class="card-title">Popular item</h4>
-            <p class="card-text">DESCRIPTION TEXT HERE</p>
-          </div>
-          <div class="card-footer">
-            <a href="/products/3" class="btn btn-primary">View Now!</a>
-          </div>
-        </div>
-      </div>
+      {% endfor %}
     </div>
-    <!-- /.row -->
-
   </div>
-  <!-- /.container -->
 {% endblock %}

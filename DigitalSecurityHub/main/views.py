@@ -2,10 +2,15 @@ from django.http import HttpResponse
 from django.shortcuts import render,redirect
 from .forms import ContactForm
 from .models import ContactMessage
+from products.models import Product
 
 def home(request):
-    return render(request, "index.html")
+    return render(request, "index.html", {
+        "products": Product.objects.all()[:3].filter()
+    })
 
+def about(request):
+    return render(request, "main/about.html")
 
 def contact(request):
     if request.method == 'GET':
