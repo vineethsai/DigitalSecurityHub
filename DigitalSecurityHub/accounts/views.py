@@ -33,7 +33,10 @@ def signup(request):
         form = SignupForm(request.POST)
         if form.is_valid():
             if form.cleaned_data["password"] != form.cleaned_data["password_conf"]:
-                return HttpResponse("Passwords did not match.", status=400)
+                return render(request, "accounts/signup.html", {
+                    'form': form,
+                    "error": "Passwords did not match."
+                }, status=400)
             try:
                 # creates user
                 User.objects.create_user(username=form.cleaned_data["username"],
@@ -50,16 +53,24 @@ def signup(request):
                     # redirects to signup2
                     return HttpResponseRedirect("/accounts/signup2")
                 else:
-                    return HttpResponse("Invalid credentials.", status=401)
+                    return render(request, "accounts/signup.html", {
+                        'form': form,
+                        "error":"Invalid credentials."
+                    }, status=401)
             except:
-                return HttpResponse("Oops something went wrong", status=500)
+                return render(request, "accounts/signup.html", {
+                    'form': form,
+                    "error": "Oops something went wrong"
+                }, status=500)
         else:
-            return HttpResponse("Invalid registration request.", status=400)
+            return render(request, "accounts/signup.html", {
+                'form': form,
+                "error": "Invalid registration request."
+            }, status=400)
     elif request.method == 'GET':
         form = SignupForm()
         return render(request, "accounts/signup.html", {'form': form}, status=200)
-    else:
-        return HttpResponse("Method not allowed on /accounts/register.", status=405)
+    return HttpResponse("Method not allowed on /accounts/register.", status=405)
 
 
 @sensitive_post_parameters()
@@ -218,11 +229,21 @@ def signin(request):
                     login(request, user)
                     return HttpResponseRedirect("/home")
                 else:
-                    return HttpResponse("Invalid credentials.", status=401)
+                    return render(request, "accounts/signin.html", {
+                        'form': form,
+                        "error": "Invalid credentials."
+                    }, status=401)
         except:
-            return HttpResponse("Oops something went wrong", status=500)
+            return render(request, "accounts/signin.html", {
+                'form': form,
+                "error": "Oops something went wrong"
+            }, status=500)
         else:
-            return HttpResponse("Bad sign in form.", status=400)
+            return render(request, "accounts/signin.html", {
+                'form': form,
+                "error": "Bad sign in form."
+            }, status=400)
+    return HttpResponse("Method not allowed on /accounts/signin.", status=405)
 
 
 @sensitive_post_parameters()

@@ -36,7 +36,7 @@
                 <a class="nav-link"  href="/accounts/signout">Logout</a>
               </li>
           {% else %}
-              <li class="nav-item {% if 'signin' in request.path %}active{% endif %}"" >
+              <li class="nav-item {% if 'signin' in request.path or 'signup' in request.path %}active{% endif %}"" >
                 <a class="nav-link"  href="/accounts/signin">Login</a>
               </li>
           {% endif %}
