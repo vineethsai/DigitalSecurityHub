@@ -1,6 +1,12 @@
 {% extends 'base.html' %}
 {% block title %} Contact Us {% endblock %}
 {% block content %}
+<div id="sAlert" class="alert alert-primary" role="alert">
+  Thank you for your inquiry!
+</div>
+<div id="dAlert" class="alert alert-danger" role="alert">
+  Failed to send message :(
+</div>
 <section class="jumbotron text-center">
     <div class="container">
         <h1 class="jumbotron-heading">CONTACT DIGITAL SECURITY HUB</h1>
@@ -14,7 +20,8 @@
                 <div class="card-header bg-primary text-white"><i class="fa fa-envelope"></i> Contact us.
                 </div>
                 <div class="card-body">
-                    <form>
+                    <!-- <form action="/main/contact"  method="post">{% csrf_token %} -->
+                        {% csrf_token %}
                         {% for field in form %}
                         <div class="form-group">
                             {{field.id}}
@@ -23,8 +30,8 @@
                         </div>
                         {% endfor %}
                         <div class="mx-auto">
-                        <button type="submit" class="btn btn-primary text-right">Submit</button></div>
-                    </form>
+                        <button onclick="sendMessage()" type="submit" class="btn btn-primary text-right">Submit</button></div>
+                    <!-- </form> -->
                 </div>
             </div>
         </div>
@@ -44,4 +51,55 @@
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block javascript %}
+<script>
+var enableNotif = true;
+function sendMessage() {
+  // Assembled request
+  var xhr = new XMLHttpRequest();
+  xhr.open("POST", "https://" + window.location.host + "/main/contact", true);
+  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+  // Get document params
+  params = "csrfmiddlewaretoken=" +	jQuery("[name=csrfmiddlewaretoken]").val() +
+    "&first_name=" + $("#id_first_name").val() +
+    "&last_name=" + $("#id_last_name").val() +
+    "&email=" + $("#id_email").val() +
+    "&message=" + $("#id_message").val()
+
+
+  // Send request
+  xhr.send(params);
+
+  // Display error handling
+  enableNotif = false;
+  xhr.onreadystatechange = function () {
+    if (enableNotif === false) {
+      if (xhr.readyState === 4 && xhr.status === 200) {
+        $("#sAlert").show();
+      } else if (xhr.readyState === 4 && xhr.status !== 200) {
+        $("#dAlert").show();
+      }
+    }
+  };
+};
+
+</script>
+{% endblock %}
+
+{% block base_head %}
+<style>
+.alert {
+  display: none;
+  position: absolute;
+  width: 100%;
+  top: 100;
+  left: 0;
+  text-align:
+  center;
+  z-index: 10;
+}
+</style>
 {% endblock %}

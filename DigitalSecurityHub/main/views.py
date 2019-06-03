@@ -18,7 +18,7 @@ def contact(request):
                 first_name=form.cleaned_data['first_name'],
                 last_name=form.cleaned_data['last_name'],
                 email=form.cleaned_data['email'],
-                # message=form.cleaned_data['message']
+                message=form.cleaned_data['message']
             )
         return HttpResponse('Successfully Created', status=200)
         # except:

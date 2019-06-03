@@ -1,6 +1,12 @@
 {% extends 'base.html' %}
 {% block title %} Shop {% endblock %}
 {% block content %}
+<div id="sAlert" class="alert alert-primary" role="alert">
+  Item added to cart!
+</div>
+<div id="dAlert" class="alert alert-danger" role="alert">
+  Failed to add item to cart! Are you logged in?
+</div>
 <div class="container">
     <div class="row">
         <div class="col-12 col-sm-3">
@@ -29,11 +35,12 @@
                                     <p class="btn btn-danger btn-block">{{product.price}}</p>
                                 </div>
                                 <div class="col">
-                                    <a
-                                      href="#"
+                                    <button
+                                      id="prod_{{product.id}}"
+                                      onclick="addToCart({{product.id}})"
                                       class="btn btn-success btn-block
                                         {% if not product.active or product.stock == 0 %}disabled{% endif %}"
-                                      >{% if not product.active %}Unavailable{% elif product.stock == 0 %}Out of Stock{% else %}Add to cart{% endif %}</a>
+                                      >{% if not product.active %}Unavailable{% elif product.stock == 0 %}Out of Stock{% else %}Add to cart{% endif %}</button>
                                 </div>
                             </div>
                         </div>
@@ -44,4 +51,50 @@
         </div>
     </div>
 </div>
+{% endblock %}
+
+{% block javascript %}
+<script>
+var enableNotif = true;
+function addToCart(productId) {
+  var xhr = new XMLHttpRequest();
+  xhr.open("POST", "https://" + window.location.host + "/products/" + productId, true);
+  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  xhr.send();
+  enableNotif = false;
+  xhr.onreadystatechange = function () {
+    if (enableNotif === false) {
+      if (xhr.readyState === 4 && xhr.status === 200) {
+        $("#sAlert").show();
+        setTimeout(function(){
+          $("#sAlert").hide('close');
+          enableNotif = true;
+        }, 2000);
+      } else if (xhr.readyState === 4 && xhr.status !== 200) {
+        $("#dAlert").show();
+        setTimeout(function(){
+          $("#dAlert").hide('close');
+          enableNotif = true;
+        }, 2000);
+      }
+    }
+  };
+};
+
+</script>
+{% endblock %}
+
+{% block base_head %}
+<style>
+.alert {
+  display: none;
+  position: absolute;
+  width: 100%;
+  top: 100;
+  left: 0;
+  text-align:
+  center;
+  z-index: 10;
+}
+</style>
 {% endblock %}

@@ -45,7 +45,6 @@ def cart(request):
 
         # Compiles list of all items in cart
         for item in cart:
-            print(item)
             cart_list.append(output_cart(item))
             total_cost += item.quantity * item.product_id.price
 
