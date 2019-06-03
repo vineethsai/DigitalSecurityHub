@@ -1,17 +1,32 @@
 {% extends 'base.html' %}
 {% block title %} Shop {% endblock %}
 {% block content %}
+<<<<<<< HEAD
+=======
+<div id="sAlert" class="alert alert-primary" role="alert">
+  Item added to cart!
+</div>
+<div id="dAlert" class="alert alert-danger" role="alert">
+  Failed to add item to cart! Are you logged in?
+</div>
+>>>>>>> 2d364f230182679bc31f657b3660386a35ea1b0f
 <div class="container">
     <div class="row">
         <div class="col-12 col-sm-3">
             <div class="card bg-light mb-3">
                 <div class="card-header bg-primary text-white text-uppercase"><i class="fa fa-list"></i> Categories</div>
                 <ul class="list-group category_block">
+<<<<<<< HEAD
                     <li class="list-group-item"><a>Hardware</a></li>
                     <li class="list-group-item"><a>Networking</a></li>
                     <li class="list-group-item"><a>Tools</a></li>
                     <li class="list-group-item"><a>Virtualization</a></li>
                     <li class="list-group-item"><a>Cloud</a></li>
+=======
+                  {% for c in category %}
+                    <li class="list-group-item"><a>{{c}}</a></li>
+                  {% endfor %}
+>>>>>>> 2d364f230182679bc31f657b3660386a35ea1b0f
                 </ul>
             </div>
         </div>
@@ -29,11 +44,20 @@
                                     <p class="btn btn-danger btn-block">{{product.price}}</p>
                                 </div>
                                 <div class="col">
+<<<<<<< HEAD
                                     <a
                                       href="#"
                                       class="btn btn-success btn-block
                                         {% if not product.active or product.stock == 0 %}disabled{% endif %}"
                                       >{% if not product.active %}Unavailable{% elif product.stock == 0 %}Out of Stock{% else %}Add to cart{% endif %}</a>
+=======
+                                    <button
+                                      id="prod_{{product.id}}"
+                                      onclick="addToCart({{product.id}})"
+                                      class="btn btn-success btn-block
+                                        {% if not product.active or product.stock == 0 %}disabled{% endif %}"
+                                      >{% if not product.active %}Unavailable{% elif product.stock == 0 %}Out of Stock{% else %}Add to cart{% endif %}</button>
+>>>>>>> 2d364f230182679bc31f657b3660386a35ea1b0f
                                 </div>
                             </div>
                         </div>
@@ -44,4 +68,60 @@
         </div>
     </div>
 </div>
+<<<<<<< HEAD
+=======
+{% endblock %}
+
+{% block javascript %}
+<script>
+var enableNotif = true;
+function addToCart(productId) {
+  // Assemble AJAX request
+  var xhr = new XMLHttpRequest();
+  xhr.open("POST", "https://" + window.location.host + "/products/" + productId, true);
+  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+  xhr.send();
+
+  // Handle error handling
+  enableNotif = false;
+  xhr.onreadystatechange = function () {
+    if (enableNotif === false) {
+      if (xhr.readyState === 4 && xhr.status === 200) {
+        $("#sAlert").show();
+        setTimeout(function(){
+          $("#sAlert").hide('close');
+          enableNotif = true;
+        }, 2000);
+      } else if (xhr.readyState === 4 && xhr.status !== 200) {
+        $("#dAlert").show();
+        setTimeout(function(){
+          $("#dAlert").hide('close');
+          enableNotif = true;
+        }, 2000);
+      }
+    }
+  };
+};
+
+</script>
+{% endblock %}
+
+{% block base_head %}
+<style>
+.alert {
+  display: none;
+  position: absolute;
+  width: 100%;
+  top: 100;
+  left: 0;
+  text-align:
+  center;
+  z-index: 10;
+}
+
+.btn {
+  width: 100%;
+}
+</style>
+>>>>>>> 2d364f230182679bc31f657b3660386a35ea1b0f
 {% endblock %}

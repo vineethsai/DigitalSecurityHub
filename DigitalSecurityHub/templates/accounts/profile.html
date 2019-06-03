@@ -1,6 +1,11 @@
 {% extends 'base.html' %}
 {% load crispy_forms_tags %}
 {% block title %} User Profile {% endblock %}
+<<<<<<< HEAD
+=======
+
+<!-- Template created by jeevan123456 https://bootsnipp.com/snippets/bx5Be -->
+>>>>>>> 2d364f230182679bc31f657b3660386a35ea1b0f
 {% block content %}
 <div class="container">
 	<div class="row">
@@ -9,8 +14,11 @@
             <a href="/accounts/signin" class="list-group-item list-group-item-action active">Profile</a>
             <a href="/cart" class="list-group-item list-group-item-action">Cart</a>
             <a href="#" class="list-group-item list-group-item-action">Orders</a>
+<<<<<<< HEAD
             <a href="#" class="list-group-item list-group-item-action">Tickets</a>
             <a href="#" class="list-group-item list-group-item-action">Settings</a>
+=======
+>>>>>>> 2d364f230182679bc31f657b3660386a35ea1b0f
             <a href="#" class="list-group-item list-group-item-action">Delete Account</a>
           </div>
 		</div>
@@ -49,6 +57,7 @@
                           <label id="lastname">{{ user.last_name }}</label>
                         </div>
                       </div>
+<<<<<<< HEAD
                       <div class="form-group row">
                         <label for="address" class="col-4 col-form-label">{{ user_type }} Address:</label>
                         <div class="col-8">
@@ -73,6 +82,59 @@
                           <label id="zip">{{ data.zip }}</label>
                         </div>
                       </div>
+=======
+                      {% if not user_type %}
+                      <div class="form-group row">
+                        <label for="address" class="col-4 col-form-label">Company Address:</label>
+                        <div class="col-8">
+                          <label id="address">{{ customer.address }}</label>
+                        </div>
+                      </div>
+                      <div class="form-group row">
+                        <label for="city" class="col-4 col-form-label">Company City:</label>
+                        <div class="col-8">
+                          <label id="city">{{ customer.city }}</label>
+                        </div>
+                      </div>
+                      <div class="form-group row">
+                        <label for="state" class="col-4 col-form-label">Company State:</label>
+                        <div class="col-8">
+                          <label id="state">{{ customer.state }}</label>
+                        </div>
+                      </div>
+                      <div class="form-group row">
+                        <label for="zip" class="col-4 col-form-label">Company ZIP:</label>
+                        <div class="col-8">
+                          <label id="zip">{{ customer.zip }}</label>
+                        </div>
+                      </div>
+                      {% else %}
+                      <div class="form-group row">
+                        <label for="address" class="col-4 col-form-label">Company Address:</label>
+                        <div class="col-8">
+                          <label id="address">{{ company.address }}</label>
+                        </div>
+                      </div>
+                      <div class="form-group row">
+                        <label for="city" class="col-4 col-form-label">Company City:</label>
+                        <div class="col-8">
+                          <label id="city">{{ company.city }}</label>
+                        </div>
+                      </div>
+                      <div class="form-group row">
+                        <label for="state" class="col-4 col-form-label">Company State:</label>
+                        <div class="col-8">
+                          <label id="state">{{ company.state }}</label>
+                        </div>
+                      </div>
+                      <div class="form-group row">
+                        <label for="zip" class="col-4 col-form-label">Company ZIP:</label>
+                        <div class="col-8">
+                          <label id="zip">{{ company.zip }}</label>
+                        </div>
+                      </div>
+                      {% endif %}
+>>>>>>> 2d364f230182679bc31f657b3660386a35ea1b0f
 		                </div>
 		            </div>
 

@@ -25,6 +25,7 @@
               <li class="nav-item {% if 'contact' in request.path %}active{% endif %}">
                 <a class="nav-link"  href="/main/contact">Contact</a>
               </li>
+<<<<<<< HEAD
           {% if user.is_authenticated %}
               <li class="nav-item {% if 'signout' in request.path %}active{% endif %}" >
                 <a class="nav-link"  href="/accounts/signout">Logout</a>
@@ -39,6 +40,22 @@
               <li class="nav-item {% if 'signup' in request.path %}active{% endif %}"" >
                 <a class="nav-link"  href="/accounts/signup">Register</a>
               </li>
+=======
+              <li class="nav-item {% if 'about' in request.path %}active{% endif %}">
+                <a class="nav-link"  href="/main/about">About</a>
+              </li>
+          {% if user.is_authenticated %}
+              <li class="nav-item {% if 'signin' in request.path %}active{% endif %}"" >
+                <a class="nav-link"  href="/accounts/signin">Profile</a>
+              </li>
+              <li class="nav-item {% if 'signout' in request.path %}active{% endif %}" >
+                <a class="nav-link"  href="/accounts/signout">Logout</a>
+              </li>
+          {% else %}
+              <li class="nav-item {% if 'signin' in request.path or 'signup' in request.path %}active{% endif %}"" >
+                <a class="nav-link"  href="/accounts/signin">Login</a>
+              </li>
+>>>>>>> 2d364f230182679bc31f657b3660386a35ea1b0f
           {% endif %}
 
         </ul>

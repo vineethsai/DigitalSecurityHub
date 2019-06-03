@@ -3,6 +3,7 @@ from django.views.generic import ListView
 from accounts.views import output_seller
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from cart.models import Cart
+from shop.models import Review
 from accounts.models import Customer, Seller
 from django.db.models import Q
 from django.views.decorators.csrf import csrf_exempt
@@ -17,14 +18,14 @@ def ProductList(request):
     POST: adds a new product
     DELETE: deletes all products owned by this user
     """
-    
+
     products = Product.objects.all()
-    
+
     # Returns a list of all current products
     if request.method == 'GET':
         # render a list of all the product titles
         return render(request, 'products/productList.html', {'object_list': Product.objects.all()}, status=200)
-    
+
     # Allows a vendor to add a new product
     if request.method == 'POST' and request.user.is_authenticated and Seller.objects.get(seller_id=request.user):
         try:
@@ -50,7 +51,7 @@ def ProductList(request):
             return HttpResponse('Product deleted')
         except:
             return HttpResponse("Failed to delete products.", status=500)
-    
+
     # Returns if user is not authenticated
     if not request.user.is_authenticated:
         return HttpResponse("Not authorized", status=401)
@@ -66,22 +67,51 @@ def SpecificProduct(request, product_id):
     PATCH: edits product information if seller
     DELETE: deletes product if seller
     """
+    # Import done here to allow prior dependencies to compile
+    from shop.views import output_review
 
     # Returns product information for the specified product
     if request.method == 'GET':
+        # Try to get all reviews
+        try:
+            reviews = []
+            rating_sum = 0
+            rating_count = 0
+            for review in Review.objects.filter(product_id=product_id):
+                reviews.append(output_review(review))
+                rating_sum += review.rating
+                rating_count += 1
+        except:
+            return HttpResponse("Failed to get all reviews", status=500)
+
+        # Renders the page
         try:
             product = output_product(Product.objects.get(id=product_id))
-            return render(request, 'products/product.html', {'product': product})
+            return render(request, 'products/product.html', {
+                'product': product,
+                'reviews':reviews,
+                "avg_rating": 0 if rating_count is 0 else rating_sum / rating_count,
+                "product_id": product_id
+            })
         except:
-            return HttpResponse('Could not find product')
-        
+            return HttpResponse('Could not find product', status=404)
+
     # Should add the product to the cart of the authenticated user
     if request.method == 'POST' and request.user.is_authenticated:
         try:
-            json_post = json.loads(request.body)
-            Cart.objects.update_or_create(customer_id=Customer.objects.get(customer_id=request.user), 
-                                        product_id=Product.objects.get(id=product_id), 
-                                        quantity=json_post['quantity'])
+            json_post = None
+            if request.body:
+                json_post = json.loads(request.body)
+
+            # Determines if quantity is default or not
+            quantity = 1
+            if json_post is not None and json_post['quantity']:
+                quantity = json_post['quantity']
+
+            # Creates new cart object
+            Cart.objects.update_or_create(customer_id=Customer.objects.get(customer_id=request.user),
+                                        product_id=Product.objects.get(id=product_id),
+                                        quantity=quantity)
             return HttpResponse('Product added')  # <-- product should be added to the current logged in user's cart
         except:
             return HttpResponse("Could not add product to cart.", status=500)
@@ -111,20 +141,13 @@ def SpecificProduct(request, product_id):
             return HttpResponse('Product deleted from store')
         else:
             return HttpResponse('You do not have the required permissions', status=401)
-    
+
     # Returns if user is not authenticated
     if not request.user.is_authenticated:
         return HttpResponse("Not authorized", status=401)
-    
+
     # Return 405 if any other method besides the ones specified above is tried
     return HttpResponse('Method not allowed', status=405)
-
-# def product_list_view(request):
-#     queryset = Product.objects.all()
-#     context = {
-#         'object_list': queryset
-#     }
-#     return render(request, "products/list.html", context)
 
 def output_product(product):
     """

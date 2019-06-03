@@ -44,10 +44,15 @@
     <!-- /.row -->
 
     <div class="row">
+<<<<<<< HEAD
+=======
+      {% for product in products %}
+>>>>>>> 2d364f230182679bc31f657b3660386a35ea1b0f
       <div class="col-md-4 mb-5">
         <div class="card h-100">
           <img class="card-img-top" src="http://placehold.it/300x200" alt="">
           <div class="card-body">
+<<<<<<< HEAD
             <h4 class="card-title">Popular item</h4>
             <p class="card-text">DESCRIPTION TEXT HERE</p>
           </div>
@@ -85,4 +90,17 @@
 
   </div>
   <!-- /.container -->
+=======
+            <h4 class="card-title">{{product.title}}</h4>
+            <p class="card-text">{{product.description}}</p>
+          </div>
+          <div class="card-footer">
+            <a href="/products/{{product.id}}" class="btn btn-primary">View Now!</a>
+          </div>
+        </div>
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+>>>>>>> 2d364f230182679bc31f657b3660386a35ea1b0f
 {% endblock %}

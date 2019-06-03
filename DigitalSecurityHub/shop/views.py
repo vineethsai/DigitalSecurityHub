@@ -18,8 +18,18 @@ def shop(request):
     GET: Renders items in the shop.
     """
     if request.method == "GET":
+<<<<<<< HEAD
         return render(request, "shop/shop.html", {
             "products": Product.objects.all()
+=======
+        categories = []
+        for category in Product.objects.order_by().values('category').distinct().filter():
+            categories.append(category["category"])
+
+        return render(request, "shop/shop.html", {
+            "products": Product.objects.all(),
+            "category": categories
+>>>>>>> 2d364f230182679bc31f657b3660386a35ea1b0f
         })
     return HttpResponse("Method not allowed on shop/" + product_id, status=405)
 
