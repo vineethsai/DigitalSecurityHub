@@ -13,11 +13,9 @@
             <div class="card bg-light mb-3">
                 <div class="card-header bg-primary text-white text-uppercase"><i class="fa fa-list"></i> Categories</div>
                 <ul class="list-group category_block">
-                    <li class="list-group-item"><a>Hardware</a></li>
-                    <li class="list-group-item"><a>Networking</a></li>
-                    <li class="list-group-item"><a>Tools</a></li>
-                    <li class="list-group-item"><a>Virtualization</a></li>
-                    <li class="list-group-item"><a>Cloud</a></li>
+                  {% for c in category %}
+                    <li class="list-group-item"><a>{{c}}</a></li>
+                  {% endfor %}
                 </ul>
             </div>
         </div>
