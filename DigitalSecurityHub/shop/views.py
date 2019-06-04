@@ -41,22 +41,33 @@ def productReview(request, product_id):
     try:
         product = Product.objects.get(id=product_id)
     except:
-        return HttpResponse("Failed to find product.", status=404)
+        return render(request, "error.html", {
+            "errorcode": 404,
+            "message": "Oops! This product could not be found!",
+            "message2": "Sorry but the page you are looking for does not exist or has been removed."
+        }, status=404)
 
     if request.method == "GET":
         output_list = []
         rating_sum = 0
         rating_count = 0
         # Outputs JSON response of all methods for given product id
-        for review in Review.objects.filter(product_id=product_id):
-            output_list.append(output_review(review))
-            rating_sum += review.rating
-            rating_count += 1
+        try:
+            for review in Review.objects.filter(product_id=product_id):
+                output_list.append(output_review(review))
+                rating_sum += review.rating
+                rating_count += 1
+        except:
+            return render(request, "error.html", {
+                "errorcode": 404,
+                "message": "Oops! No reviews for that product could be found!",
+                "message2": "Add a review or try a different product!"
+            }, status=404)
 
         # Returns json serialized message
         return render(request, "shop/reviewList.html", {
             "reviews": output_list,
-            "product": Product.objects.get(id=product_id),
+            "product": product,
             "avg_rating": 0 if rating_count is 0 else math.floor((rating_sum / rating_count))
         })
 
@@ -112,7 +123,11 @@ def specificProductReview(request, review_id):
     try:
         review = Review.objects.get(id=review_id)
     except:
-        return HttpResponse("Failed to find review.", status=404)
+        return render(request, "error.html", {
+            "errorcode": 404,
+            "message": "Oops! This review could not be found!",
+            "message2": "Sorry but the page you are looking for does not exist or has been removed."
+        }, status=404)
 
     if request.method == "GET":
         return render(request, "shop/specificReview.html", {"review": output_review(review)})

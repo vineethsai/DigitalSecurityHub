@@ -6,16 +6,18 @@ from django.contrib.auth.models import User
 from cart.models import Cart
 from orders.models import Order, LineItem
 from orders.views import output_order
+from orders.forms import CheckoutForm
 from accounts.models import Customer
 from accounts.views import output_customer
 from products.models import Product
 from products.views import output_product
-from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.debug import sensitive_post_parameters
+
 
 
 
 # Create your views here.
-@csrf_exempt
+@sensitive_post_parameters()
 def cart(request):
     """
     Allows user to interact with their cart
@@ -26,18 +28,30 @@ def cart(request):
     """
     # Verifies user is signed in.
     if not request.user.is_authenticated:
-        return HttpResponse(status=401)
+        return render(request, "error.html", {
+            "errorcode": 401,
+            "message": "Not authorized!",
+            "message2": "Looks like you don't have permission to view this content."
+        }, status=401)
 
     # Attempts to get users all items in users cart
     try:
         customer = Customer.objects.get(customer_id=request.user)
     except:
-        return HttpResponse("User not found.", status=404)
+        return render(request, "error.html", {
+            "errorcode": 404,
+            "message": "Oops! This user could not be found!",
+            "message2": "Sorry but the user you are looking for does not exist or has been removed."
+        }, status=404)
 
     try:
         cart = Cart.objects.filter(customer_id=customer)
     except:
-        return HttpResponse("Cart not found.", status=404)
+        return render(request, "error.html", {
+            "errorcode": 404,
+            "message": "Oops! This cart could not be found!",
+            "message2": "Sorry but the cart you are looking for does not exist or has been removed."
+        }, status=404)
 
     if request.method == "GET":
         cart_list = []
@@ -51,13 +65,20 @@ def cart(request):
             total_cost += item.quantity * item.product_id.price
 
         # Returns json serialized message
-        return render(request, 'cart/cart.html', {
+        return render(request, "cart/cart.html", {
             "cart_items": cart_list,
             "total": total_cost
         })
-        return JsonResponse(cart_list, safe=False)
 
     if request.method == "POST":
+        form = CheckoutForm(request.POST)
+        if not form.is_valid():
+            return render(request, "error.html", {
+                "errorcode": 500,
+                "message": "Failed to create order!",
+                "message2": "Try redoing your checkout."
+            }, status=500)
+
         # Adds up cart total
         total = 0
         for item in cart:
@@ -67,10 +88,23 @@ def cart(request):
         try:
             new_order = Order.objects.create(
                 customer_id = Customer.objects.get(customer_id=request.user),
-                order_total = total
+                order_total = total,
+                shipping_name = form.cleaned_data["first_name"] + " " + form.cleaned_data["last_name"],
+                shipping_address = form.cleaned_data["address"],
+                shipping_city = form.cleaned_data["city"],
+                shipping_state = form.cleaned_data["state"],
+                shipping_zip = form.cleaned_data["zip"],
+                billing_name = form.cleaned_data["card_name"],
+                billing_card = form.cleaned_data["cred_card_number"] % 100000,
+                billing_expiration = form.cleaned_data["expiration"],
+                billing_cvv = form.cleaned_data["cvv"],
             )
         except:
-            return HttpResponse("Failed to create order", status=500)
+            return render(request, "error.html", {
+                "errorcode": 500,
+                "message": "Failed to create order!",
+                "message2": "Try redoing your checkout."
+            }, status=500)
 
         # Adds each item in cart to line item
         for item in cart:
@@ -82,9 +116,20 @@ def cart(request):
                     price_extended = item.product_id.price * item.quantity
                 )
             except:
-                return HttpResponse("Failed to create all line items. Order still processed", status=500)
+                return render(request, "error.html", {
+                    "errorcode": 500,
+                    "message": "Failed to create all line items! Order still processed!",
+                    "message2": "Some items will have to be added later."
+                }, status=500)
 
-            return JsonResponse(output_order(new_order), safe=False)
+        # Clears cart
+        for item in cart:
+            try:
+                item.delete()
+            except:
+                pass # Can be easily spotted and resolved by users later
+
+            return HttpResponseRedirect("/orders")
 
     if request.method == "DELETE":
         # Attempt to get JSON
