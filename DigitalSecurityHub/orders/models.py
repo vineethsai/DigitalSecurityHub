@@ -9,7 +9,7 @@ class Order(models.Model):
     order_total = models.DecimalField(decimal_places=2, max_digits=20, default=0.0)
 
 class LineItem(models.Model):
-    order_id = models.ForeignKey('Order', on_delete=models.CASCADE)
+    order_id = models.ForeignKey("Order", on_delete=models.CASCADE)
     product_id = models.ForeignKey(Product, on_delete=models.CASCADE)
     quantity = models.IntegerField(default=0)
     price_extended = models.DecimalField(decimal_places=2, max_digits=20, default=0.0)

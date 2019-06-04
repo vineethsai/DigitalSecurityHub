@@ -14,7 +14,7 @@
                 <div class="card-header bg-primary text-white text-uppercase"><i class="fa fa-list"></i> Categories</div>
                 <ul class="list-group category_block">
                   {% for c in category %}
-                    <li class="list-group-item"><a>{{c}}</a></li>
+                    <li onclick="filterGroup('{{c|cut:' '}}')" class="list-group-item category category_{{c|cut:' '}}"><a>{{c}}</a></li>
                   {% endfor %}
                 </ul>
             </div>
@@ -22,7 +22,7 @@
         <div class="col">
             <div class="row">
               {% for product in products %}
-                <div class="col-12 col-md-6 col-lg-4">
+                <div class="col-12 col-md-6 col-lg-4 {{product.category|cut:' '}}">
                     <div class="card">
                         <img class="card-img-top" src="https://www.emazzanti.net/wp-content/uploads/2017/11/Online-Network-Security-Store-PR.jpg" alt="Card image cap">
                         <div class="card-body">
@@ -33,12 +33,12 @@
                                     <p class="btn btn-danger btn-block">${{product.price}}</p>
                                 </div>
                                 <div class="col">
-                                    <button
+                                    <a
                                       id="prod_{{product.id}}"
-                                      onclick="addToCart({{ product.id }})"
+                                      href="/products/{{product.id}}"
                                       class="btn btn-success btn-block
                                         {% if not product.active or product.stock == 0 %}disabled{% endif %}"
-                                      >{% if not product.active %}Unavailable{% elif product.stock == 0 %}Out of Stock{% else %}Add to cart{% endif %}</button>
+                                      >{% if not product.active %}Unavailable{% elif product.stock == 0 %}Out of Stock{% else %}More Info{% endif %}</a>
                                 </div>
                             </div>
                         </div>
@@ -53,35 +53,15 @@
 
 {% block javascript %}
 <script>
-var enableNotif = true;
-function addToCart(productId) {
-  // Assemble AJAX request
-  var xhr = new XMLHttpRequest();
-  xhr.open("POST", "http://" + window.location.host + "/products/" + productId, true);
-  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-  xhr.send();
-
-  // Handle error handling
-  enableNotif = false;
-  xhr.onreadystatechange = function () {
-    if (enableNotif === false) {
-      if (xhr.readyState === 4 && xhr.status === 200) {
-        $("#sAlert").show();
-        setTimeout(function(){
-          $("#sAlert").hide('close');
-          enableNotif = true;
-        }, 2000);
-      } else if (xhr.readyState === 4 && xhr.status !== 200) {
-        $("#dAlert").show();
-        setTimeout(function(){
-          $("#dAlert").hide('close');
-          enableNotif = true;
-        }, 2000);
-      }
-    }
-  };
-};
-
+function filterGroup(id) {
+  if ($("." + id).css("display") === "none") {
+    $("." + id).css("display", "");
+    $(".category_" + id).css("color", "");
+  } else {
+    $("." + id).css("display", "none");
+    $(".category_" + id).css("color", "grey");
+  }
+}
 </script>
 {% endblock %}
 
@@ -100,6 +80,10 @@ function addToCart(productId) {
 
 .btn {
   width: 100%;
+}
+
+.category {
+  cursor: pointer;
 }
 </style>
 {% endblock %}

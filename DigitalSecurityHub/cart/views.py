@@ -51,7 +51,7 @@ def cart(request):
             total_cost += item.quantity * item.product_id.price
 
         # Returns json serialized message
-        return render(request, 'cart/cart.html', {
+        return render(request, "cart/cart.html", {
             "cart_items": cart_list,
             "total": total_cost
         })

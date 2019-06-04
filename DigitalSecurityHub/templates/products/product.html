@@ -49,7 +49,7 @@
                 <div class="card-body">
                     <p class="name"><strong>{{product.Title}}</strong></p>
                     <p class="price">Price: ${{product.Price}}</p>
-                    <p class="price">Company: 
+                    <p class="price">Company:
                     {{company}}
                     </p>
                       <div class="form-group">
@@ -99,7 +99,7 @@
             </div>
         </div>
 
-        
+
 
         <!-- Reviews -->
         <div class="col-12" id="reviews">
@@ -144,6 +144,8 @@
                 </div>
             </div>
         </div>
+
+        {% if is_seller == 1 %}
         <div class="col-12" id ="delete">
             <div class="card border-light mb-3">
                 <div class="card-header bg-primary text-white text-uppercase"><i class="fa fa-align-justify"></i> Delete Product</div>
@@ -152,6 +154,7 @@
                 </div>
             </div>
         </div>
+        {% endif %}
     </div>
 </div>
 {% endblock %}
@@ -181,7 +184,7 @@ $(document).ready(function(){
 function deleteProduct(productId) {
   // Assemble AJAX request
   var xhr = new XMLHttpRequest();
-  xhr.open("DELETE", "http://" + window.location.host + "/products/" + productId, true);
+  xhr.open("DELETE", "https://" + window.location.host + "/products/" + productId, true);
   xhr.setRequestHeader('Content-Type', 'application/json')
 
   xhr.onload = function () {
@@ -199,7 +202,7 @@ var enableNotif = true;
 function addToCart(productId) {
   // Assemble AJAX request
   var xhr = new XMLHttpRequest();
-  xhr.open("POST", "http://" + window.location.host + "/products/" + productId, true);
+  xhr.open("POST", "https://" + window.location.host + "/products/" + productId, true);
   xhr.setRequestHeader('Content-Type', 'application/json')
   xhr.send(JSON.stringify({"quantity": Number($("#quantity").val())}));
 
@@ -227,7 +230,7 @@ function addToCart(productId) {
 function writeReview(productId) {
   // Assemble AJAX request
   var xhr = new XMLHttpRequest();
-  xhr.open("POST", "http://" + window.location.host + "/shop/" + productId + "/review", true);
+  xhr.open("POST", "https://" + window.location.host + "/shop/" + productId + "/review", true);
   xhr.setRequestHeader('Content-Type', 'application/json')
   xhr.send(JSON.stringify({
     "rating": Number($("#rating").val()),
@@ -238,13 +241,15 @@ function writeReview(productId) {
   enableNotif = false;
   xhr.onreadystatechange = function () {
     if (enableNotif === false) {
-      if (xhr.readyState === 4 && xhr.status === 200) {
+      if (xhr.readyState === 4 && xhr.status === 201) {
         $("#sAlertR").show();
+        $("#review").val("")
+        selectRating(0)
         setTimeout(function(){
           $("#sAlertR").hide('close');
           enableNotif = true;
         }, 2000);
-      } else if (xhr.readyState === 4 && xhr.status !== 200) {
+      } else if (xhr.readyState === 4 && xhr.status !== 201) {
         $("#dAlertR").show();
         setTimeout(function(){
           $("#dAlertR").hide('close');
