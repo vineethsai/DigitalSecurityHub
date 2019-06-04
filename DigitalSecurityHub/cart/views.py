@@ -6,16 +6,18 @@ from django.contrib.auth.models import User
 from cart.models import Cart
 from orders.models import Order, LineItem
 from orders.views import output_order
+from orders.forms import CheckoutForm
 from accounts.models import Customer
 from accounts.views import output_customer
 from products.models import Product
 from products.views import output_product
-from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.debug import sensitive_post_parameters
+
 
 
 
 # Create your views here.
-@csrf_exempt
+@sensitive_post_parameters()
 def cart(request):
     """
     Allows user to interact with their cart
@@ -69,19 +71,40 @@ def cart(request):
         })
 
     if request.method == "POST":
+        form = CheckoutForm(request.POST)
+        if not form.is_valid():
+            return render(request, "error.html", {
+                "errorcode": 500,
+                "message": "Failed to create order!",
+                "message2": "Try redoing your checkout."
+            }, status=500)
+
         # Adds up cart total
         total = 0
         for item in cart:
             total += item.product_id.price * item.quantity
 
         # Creates new order
-        try:
-            new_order = Order.objects.create(
-                customer_id = Customer.objects.get(customer_id=request.user),
-                order_total = total
-            )
-        except:
-            return HttpResponse("Failed to create order", status=500)
+        # try:
+        new_order = Order.objects.create(
+            customer_id = Customer.objects.get(customer_id=request.user),
+            # order_total = total,
+            shipping_name = form.cleaned_data["first_name"] + " " + form.cleaned_data["last_name"],
+            shipping_address = form.cleaned_data["address"],
+            shipping_city = form.cleaned_data["city"],
+            shipping_state = form.cleaned_data["state"],
+            shipping_zip = form.cleaned_data["zip"],
+            billing_name = form.cleaned_data["card_name"],
+            billing_card = form.cleaned_data["cred_card_number"] % 100000,
+            billing_expiration = form.cleaned_data["expiration"],
+            billing_cvv = form.cleaned_data["cvv"],
+        )
+        # except:
+        #     return render(request, "error.html", {
+        #         "errorcode": 500,
+        #         "message": "Failed to create order!",
+        #         "message2": "Try redoing your checkout."
+        #     }, status=500)
 
         # Adds each item in cart to line item
         for item in cart:

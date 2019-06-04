@@ -17,7 +17,7 @@ class Customer(models.Model):
     state = models.CharField(max_length=100, default="WA")
     zip = models.IntegerField(default=98105)
     type = models.IntegerField(choices=RELEVANCE_CHOICES)
-    
+
     def save(self, *args, **kwargs):
         if self.zip < 0:
             return

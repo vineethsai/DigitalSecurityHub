@@ -1,6 +1,9 @@
 from django.contrib import admin
 from django.urls import path, include
 
+handler404 = 'DigitalSecurityHub.views.handler404'
+handler500 = 'DigitalSecurityHub.views.handler500'
+
 urlpatterns = [
     path("admin/", admin.site.urls),
     path("accounts/", include("accounts.urls")),

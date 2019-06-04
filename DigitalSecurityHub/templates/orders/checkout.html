@@ -1,0 +1,130 @@
+{% extends "base.html" %}
+{% block title %} Checkout {% endblock %}
+
+{% load static %}
+
+<!-- Template created by bootstrap https://getbootstrap.com/docs/4.0/examples/checkout/ -->
+{% block content %}
+<section class="jumbotron text-center">
+    <div class="container-fluid">
+        <h1 class="jumbotron-heading">Checkout</h1>
+    </div>
+</section>
+  <div class="container">
+  <div class="row">
+    <div class="col-md-4 order-md-2 mb-4">
+      <h4 class="d-flex justify-content-between align-items-center mb-3">
+        <span class="text-muted">Your cart</span>
+        <span class="badge badge-secondary badge-pill">{{cart_items|length}}</span>
+      </h4>
+      <ul class="list-group mb-3">
+        {% for item in cart_items %}
+        <li class="list-group-item d-flex justify-content-between lh-condensed">
+          <div>
+            <h6 class="my-0">{{item.Product.Title}}</h6>
+            </div>
+          <span class="text-muted">{{item.Product.Price}}</span>
+        </li>
+        {% endfor %}
+        <li class="list-group-item d-flex justify-content-between">
+          <span>Total (USD)</span>
+          <strong>${{total}}</strong>
+        </li>
+      </ul>
+
+    </div>
+    <div class="col-md-8 order-md-1">
+      <h4 class="mb-3">Billing address</h4>
+      <form action="/cart/" method="post">{%csrf_token%}
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label for="{{form.first_name.auto_id}}">{{form.first_name.label}}</label>
+            {{form.first_name}}
+            <div class="invalid-feedback">
+              Valid first name is required.
+            </div>
+          </div>
+          <div class="col-md-6 mb-3">
+            <label for="{{form.last_name.auto_id}}">{{form.last_name.label}}</label>
+            {{form.last_name}}
+            <div class="invalid-feedback">
+              Valid last name is required.
+            </div>
+          </div>
+        </div>
+
+        <div class="mb-3">
+          <label for="{{form.address.auto_id}}">{{form.address.label}}</label>
+          {{form.address}}
+          <div class="invalid-feedback">
+            Please enter your shipping address.
+          </div>
+        </div>
+
+        <div class="row">
+          <div class="col-md-5 mb-3">
+            <label for="{{form.city.auto_id}}">{{form.city.label}}</label>
+            {{form.city}}
+            <div class="invalid-feedback">
+              Please select a valid city.
+            </div>
+          </div>
+          <div class="col-md-4 mb-3">
+            <label for="{{form.state.auto_id}}">{{form.state.label}}</label>
+            {{form.state}}
+            <div class="invalid-feedback">
+              Please provide a valid state.
+            </div>
+          </div>
+          <div class="col-md-3 mb-3">
+            <label for="{{form.zip.auto_id}}">{{form.zip.label}}</label>
+            {{form.zip}}
+            <div class="invalid-feedback">
+              Zip code required.
+            </div>
+          </div>
+        </div>
+        <hr class="mb-4">
+
+        <h4 class="mb-3">Payment</h4>
+
+        <div class="row">
+          <div class="col-md-6 mb-3">
+            <label for="{{form.card_name.auto_id}}">{{form.card_name.label}}</label>
+            {{form.card_name}}
+            <small class="text-muted">Full name as displayed on card</small>
+            <div class="invalid-feedback">
+              Name on card is required
+            </div>
+          </div>
+          <div class="col-md-6 mb-3">
+            <label for="{{form.cred_card_number.auto_id}}">{{form.cred_card_number.label}}</label>
+            {{form.cred_card_number}}
+            <div class="invalid-feedback">
+              Credit card number is required
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col-md-3 mb-3">
+            <label for="{{form.expiration.auto_id}}">{{form.expiration.label}}</label>
+            {{form.expiration}}
+            <div class="invalid-feedback">
+              Expiration date required
+            </div>
+          </div>
+          <div class="col-md-3 mb-3">
+            <label for="{{form.cvv.auto_id}}">{{form.cvv.label}}</label>
+            {{form.cvv}}
+            <div class="invalid-feedback">
+              Security code required
+            </div>
+          </div>
+        </div>
+        <hr class="mb-4">
+        <button class="btn btn-primary btn-lg btn-block" type="submit">Submit Order</button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock%}

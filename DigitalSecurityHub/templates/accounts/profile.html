@@ -1,6 +1,6 @@
 {% extends 'base.html' %}
-{% load crispy_forms_tags %}
 {% block title %} User Profile {% endblock %}
+
 
 <!-- Template created by jeevan123456 https://bootsnipp.com/snippets/bx5Be -->
 {% block content %}
@@ -76,6 +76,12 @@
 		                </div>
                 </div>
                 {% if user_type == 'Company' %}
+								<div class="row new-section">
+		                <div class="col-md-12">
+		                    <h4>Create New Product</h4>
+		                    <hr>
+		                </div>
+		            </div>
                 <form action="/products/"  method="post">{% csrf_token %}
                   {% for field in form %}
                   <div class="form-group">
@@ -97,4 +103,12 @@
 		</div>
 	</div>
 </div>
+{% endblock %}
+
+{% block base_head %}
+<style>
+.new-section {
+	margin-top: 1em;
+}
+</style>
 {% endblock %}
