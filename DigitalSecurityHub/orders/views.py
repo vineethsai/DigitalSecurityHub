@@ -2,21 +2,101 @@ from django.shortcuts import render
 from accounts.models import Customer
 from cart.models import Cart
 from accounts.views import output_customer
+from products.views import output_product
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from django.views.decorators.csrf import csrf_exempt
-from .models import Order
+from .models import Order, LineItem
 from django.db.models import Q
 from orders.forms import CheckoutForm
 import json
 
 
 # Create your views here.
-def output_order(order):
-    return {
+def output_order(order, sensitive=False):
+    return_obj = {
         "Customer": output_customer(order.customer_id),
         "OrderDate": order.order_date,
-        "Total": order.order_total
+        "Total": order.order_total,
+        "ShippingName": order.shipping_name,
+        "ShippingAddress": order.shipping_address,
+        "ShippingCity": order.shipping_city,
+        "ShippingState": order.shipping_state,
+        "ShippingZIP": order.shipping_zip
     }
+
+    if sensitive:
+        return_obj["BillingName"] = billing_name
+        return_obj["BillingCard"] = billing_card
+        return_obj["BillingExpiration"] = billing_expiration
+        return_obj["BillingCVV"] = billing_cvv
+
+    return return_obj
+
+def output_line_item(lineItem):
+    return {
+        "Order": output_order(lineItem.order_id),
+        "Product": output_product(lineItem.product_id),
+        "Quantity": lineItem.quantity,
+        "Price": lineItem.price_extended
+    }
+
+def order(request):
+    """
+    GET: renders all the users previous orders.
+    """
+    if not request.user.is_authenticated:
+        return render(request, "error.html", {
+            "errorcode": 401,
+            "message": "Looks like you don't have permission to view this content!",
+        }, status=401)
+
+    # Attempts to get all user orders
+    try:
+        customer = Customer.objects.get(customer_id=request.user)
+    except:
+        return render(request, "error.html", {
+            "errorcode": 404,
+            "message": "Oops! This user could not be found!",
+            "message2": "Sorry but the user you are looking for does not exist or has been removed."
+        }, status=404)
+    try:
+        orders = Order.objects.filter(customer_id=customer)
+    except:
+        return render(request, "error.html", {
+            "errorcode": 404,
+            "message": "Oops! Orders could not be found!",
+            "message2": "Sorry but the orders you are looking for does not exist or has been removed."
+        }, status=404)
+
+    if request.method == "GET":
+        order_list = []
+        for order in orders:
+            formatted_order = output_order(order)
+            formatted_order["uid"] = order.id
+
+
+            # Attempts to get all line items
+            try:
+                line_item_list = []
+                line_items = LineItem.objects.filter(order_id=order)
+
+                for line_item in line_items:
+                    line_item_list.append(output_line_item(line_item))
+                formatted_order["lineItems"] = line_item_list
+            except:
+                return render(request, "error.html", {
+                    "errorcode": 404,
+                    "message": "Oops! Not all line items could not be found!",
+                    "message2": "Sorry but the orders you are looking for is having issues right now."
+                }, status=404)
+            order_list.append(formatted_order)
+
+        return render(request, "orders/orders.html", {
+            "orders": order_list
+        })
+
+
+    return HttpResponse("Method not allowed", status=405)
 
 def checkout(request):
     """

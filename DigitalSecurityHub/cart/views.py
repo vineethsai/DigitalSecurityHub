@@ -85,26 +85,26 @@ def cart(request):
             total += item.product_id.price * item.quantity
 
         # Creates new order
-        # try:
-        new_order = Order.objects.create(
-            customer_id = Customer.objects.get(customer_id=request.user),
-            # order_total = total,
-            shipping_name = form.cleaned_data["first_name"] + " " + form.cleaned_data["last_name"],
-            shipping_address = form.cleaned_data["address"],
-            shipping_city = form.cleaned_data["city"],
-            shipping_state = form.cleaned_data["state"],
-            shipping_zip = form.cleaned_data["zip"],
-            billing_name = form.cleaned_data["card_name"],
-            billing_card = form.cleaned_data["cred_card_number"] % 100000,
-            billing_expiration = form.cleaned_data["expiration"],
-            billing_cvv = form.cleaned_data["cvv"],
-        )
-        # except:
-        #     return render(request, "error.html", {
-        #         "errorcode": 500,
-        #         "message": "Failed to create order!",
-        #         "message2": "Try redoing your checkout."
-        #     }, status=500)
+        try:
+            new_order = Order.objects.create(
+                customer_id = Customer.objects.get(customer_id=request.user),
+                order_total = total,
+                shipping_name = form.cleaned_data["first_name"] + " " + form.cleaned_data["last_name"],
+                shipping_address = form.cleaned_data["address"],
+                shipping_city = form.cleaned_data["city"],
+                shipping_state = form.cleaned_data["state"],
+                shipping_zip = form.cleaned_data["zip"],
+                billing_name = form.cleaned_data["card_name"],
+                billing_card = form.cleaned_data["cred_card_number"] % 100000,
+                billing_expiration = form.cleaned_data["expiration"],
+                billing_cvv = form.cleaned_data["cvv"],
+            )
+        except:
+            return render(request, "error.html", {
+                "errorcode": 500,
+                "message": "Failed to create order!",
+                "message2": "Try redoing your checkout."
+            }, status=500)
 
         # Adds each item in cart to line item
         for item in cart:
@@ -116,9 +116,20 @@ def cart(request):
                     price_extended = item.product_id.price * item.quantity
                 )
             except:
-                return HttpResponse("Failed to create all line items. Order still processed", status=500)
+                return render(request, "error.html", {
+                    "errorcode": 500,
+                    "message": "Failed to create all line items! Order still processed!",
+                    "message2": "Some items will have to be added later."
+                }, status=500)
 
-            return JsonResponse(output_order(new_order), safe=False)
+        # Clears cart
+        for item in cart:
+            try:
+                item.delete()
+            except:
+                pass # Can be easily spotted and resolved by users later
+
+            return HttpResponseRedirect("/orders")
 
     if request.method == "DELETE":
         # Attempt to get JSON

@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %} Checkout {% endblock %}
+
+{% load static %}
+
+<!-- Template created by bootstrap https://getbootstrap.com/docs/4.0/examples/checkout/ -->
+{% block content %}
+<div class="p-4">
+    <h3>Order Tracking</h3>
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col">
+                <nav aria-label="breadcrumb">
+                    <ol class="breadcrumb">
+                        <li class="breadcrumb-item"><a href="/">Home</a></li>
+                        <li class="breadcrumb-item"><a href="/accounts/signin">Profile</a></li>
+                        <li class="breadcrumb-item active" aria-current="page">Orders</li>
+                    </ol>
+                </nav>
+            </div>
+        </div>
+    </div>
+    <table class="table table-bordered track_tbl">
+        <thead>
+            <tr>
+                <th>Order ID</th>
+                <th>Items Purchased</th>
+                <th>Cost</th>
+                <th>Shipping To</th>
+                <th>Date/Time</th>
+            </tr>
+        </thead>
+        <tbody>
+          {% for order in orders %}
+            <tr>
+              <td>{{order.uid}}</td>
+              <td><ul>
+              {% for item in order.lineItems %}
+              <li>{{item.Product.Title}}</li>
+              {% endfor %}
+              </ul></td>
+              <td>{{order.Total}}</td>
+              <td>{{order.ShippingCity}}, {{order.ShippingState}}</td>
+              <td>{{order.OrderDate}}</td>
+            </tr>
+          {% endfor %}
+        </tbody>
+    </table>
+    </div>
+{% endblock %}
