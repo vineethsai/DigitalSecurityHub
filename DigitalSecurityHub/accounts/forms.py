@@ -53,4 +53,4 @@ class CompanyForm(forms.Form):
 
 
 class DeleteForm(forms.Form):
-    name = forms.CharField(label="Name", max_length=30, required=True)
+    delete = forms.CharField(label="", max_length=30, required=True, widget=forms.TextInput(attrs={"class": "form-control"}))

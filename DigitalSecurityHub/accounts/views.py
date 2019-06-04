@@ -14,6 +14,21 @@ from products.forms import ProductCreationForm
 # customer vs vendor
 user_type = 0
 
+def delete(request):
+    """
+    GET: Will render the delete account confirmation page.
+    """
+    if not request.user.is_authenticated:
+        return render(request, "error.html", {
+            "errorcode": 401,
+            "message": "Looks like you don't have permission to view this content!",
+        }, status=401)
+
+    if request.method == "GET":
+        return render(request, "accounts/delete.html", {
+            "form": DeleteForm()
+        })
+    return HttpResponse("Method not allowed.", status=405)
 
 @sensitive_post_parameters()
 def signup(request):
@@ -193,7 +208,7 @@ def customer(request):
             # if authenticated, deletes user
             if request.user.is_authenticated:
                 User.objects.get(id=request.user.id).delete()
-                return HttpResponse("Successfully Deleted")
+                return HttpResponseRedirect("Successfully Deleted")
             else:
                 return HttpResponse("Login to continue")
         except:
