@@ -29,7 +29,11 @@ def specificOrder(request, order_id):
             order = output_order(Order.objects.get(Q(id=order_id) & Q(customer_id=Customer.objects.get(customer_id=request.user))))  # <-- i think that customer_id needs to have _id or _pk added to it to let it know is needs to join tables based on that
             return JsonResponse(order, safe=False)
         except:
-            return HttpResponse("Order not found", status=500)
+            return render(request, "error.html", {
+                "errorcode": 404,
+                "message": "Oops! This order could not be found!",
+                "message2": "Sorry but the order you are looking for does not exist or has been removed."
+            }, status=404)
 
     # Allows logged in user to update order
     if request.method == "PATCH" and request.user.is_authenticated:

@@ -17,7 +17,7 @@
 <div id="dAlertR" class="alert alert-danger" role="alert">
   Failed to write review! Are you logged in?
 </div>
-<div class="container">
+<div class="container-fluid">
     <div class="row">
         <div class="col">
             <nav aria-label="breadcrumb">
@@ -30,7 +30,7 @@
         </div>
     </div>
 </div>
-<div class="container">
+<div class="container-fluid">
     <div class="row">
         <!-- Image -->
         <div class="col-12 col-lg-6">
@@ -145,7 +145,7 @@
             </div>
         </div>
 
-        {% if is_seller == 1 %}
+        {% if isSeller == 1 %}
         <div class="col-12" id ="delete">
             <div class="card border-light mb-3">
                 <div class="card-header bg-primary text-white text-uppercase"><i class="fa fa-align-justify"></i> Delete Product</div>
@@ -276,17 +276,6 @@ function selectRating(starNumber) {
 
 {% block base_head %}
 <style>
-.alert {
-  display: none;
-  position: absolute;
-  width: 100%;
-  top: 100;
-  left: 0;
-  text-align:
-  center;
-  z-index: 10;
-}
-
 .stars {
     display: flex;
     flex-direction: row-reverse;

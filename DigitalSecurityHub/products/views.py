@@ -24,9 +24,16 @@ def ProductList(request):
     # Returns a list of all current products
     if request.method == "GET":
         # render a list of all the product titles
-        return render(request, "products/productList.html", {"object_list": Product.objects.all(),
-        "Seller": Seller,
-        "Company": Company}, status=200)
+        try:
+            return render(request, "products/productList.html", {"object_list": Product.objects.all(),
+            "Seller": Seller,
+            "Company": Company}, status=200)
+        except:
+            return render(request, "error.html", {
+                "errorcode": 404,
+                "message": "Oops! We couln't find any products!",
+                "message2": "Try to add some or contact us."
+            }, status=404)
 
     # Allows a vendor to add a new product
     if request.method == "POST" and request.user.is_authenticated and Seller.objects.get(seller_id=request.user):
@@ -85,20 +92,26 @@ def SpecificProduct(request, product_id):
                 rating_sum += review.rating
                 rating_count += 1
         except:
-            return HttpResponse("Failed to get all reviews", status=500)
+            return render(request, "error.html", {
+                "errorcode": 500,
+                "message": "Oops! The reviews failed to load!",
+                "message2": "Sorry but it looks like some content on this page can't be loaded at the moment."
+            }, status=500)
 
         # Attempts to get product
         try:
             product_obj = Product.objects.get(id=product_id)
         except:
-            return HttpResponse("Could not find product", status=404)
+            return render(request, "error.html", {
+                "errorcode": 404,
+                "message": "Oops! This product could not be found!",
+                "message2": "Sorry but the page you are looking for does not exist or has been removed."
+            }, status=404)
 
         # Checks if user is the seller
         is_seller = 0
         try:
             seller = Seller.objects.get(seller_id=request.user)
-            print(product_obj)
-            print(seller)
             is_seller = 0 if seller is product_obj.seller_id else 1
         except:
             pass # if this fails it could just mean they aren't a seller so we don't care
@@ -115,6 +128,11 @@ def SpecificProduct(request, product_id):
                 "isSeller": is_seller
             })
         except:
+            return render(request, "error.html", {
+                "errorcode": 500,
+                "message": "Request Failed!",
+                "message2": "Sorry something went wrong."
+            }, status=500)
             return HttpResponse("Request failed", status=500)
 
     # Should add the product to the cart of the authenticated user

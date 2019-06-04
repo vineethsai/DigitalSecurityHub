@@ -127,6 +127,16 @@ def vendor(request):
                                                     seller_id=request.user,
                                                     company_id=Company.objects.get(
                                                         name=vendor_form_1.cleaned_data["name"]))
+
+                    # create customer
+                    Customer.objects.update_or_create(
+                        customer_id=request.user,
+                        address=vendor_form_1.cleaned_data["address"],
+                        city=vendor_form_1.cleaned_data["city"],
+                        state=vendor_form_1.cleaned_data["state"],
+                        zip=vendor_form_1.cleaned_data["zip"],
+                        type=1
+                    )
                 return HttpResponseRedirect("/")
             except:
                 return HttpResponse("Oops something went wrong", status=500)
@@ -275,9 +285,11 @@ def signout(request):
             logout(request)
             return HttpResponseRedirect("/")
         else:
-            return HttpResponse("Not logged in.", status=200)
-    else:
-        return HttpResponse("Method not allowed on accounts/signout.", status=405)
+            return render(request, "error.html", {
+                "message": "Not Logged In!",
+                "message2": "Try logging in before you log out."
+            }, status=404)
+    return HttpResponse("Method not allowed on accounts/signout.", status=405)
 
 
 # Helped fimctions by Quinn

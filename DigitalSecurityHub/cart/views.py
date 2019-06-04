@@ -26,18 +26,30 @@ def cart(request):
     """
     # Verifies user is signed in.
     if not request.user.is_authenticated:
-        return HttpResponse(status=401)
+        return render(request, "error.html", {
+            "errorcode": 401,
+            "message": "Not authorized!",
+            "message2": "Looks like you don't have permission to view this content."
+        }, status=401)
 
     # Attempts to get users all items in users cart
     try:
         customer = Customer.objects.get(customer_id=request.user)
     except:
-        return HttpResponse("User not found.", status=404)
+        return render(request, "error.html", {
+            "errorcode": 404,
+            "message": "Oops! This user could not be found!",
+            "message2": "Sorry but the user you are looking for does not exist or has been removed."
+        }, status=404)
 
     try:
         cart = Cart.objects.filter(customer_id=customer)
     except:
-        return HttpResponse("Cart not found.", status=404)
+        return render(request, "error.html", {
+            "errorcode": 404,
+            "message": "Oops! This cart could not be found!",
+            "message2": "Sorry but the cart you are looking for does not exist or has been removed."
+        }, status=404)
 
     if request.method == "GET":
         cart_list = []
@@ -55,7 +67,6 @@ def cart(request):
             "cart_items": cart_list,
             "total": total_cost
         })
-        return JsonResponse(cart_list, safe=False)
 
     if request.method == "POST":
         # Adds up cart total
