@@ -7,6 +7,7 @@ from django.contrib.auth.models import User
 from django.views.decorators.debug import sensitive_post_parameters
 from .models import Customer, Seller, Company
 from django.shortcuts import get_object_or_404
+from products.forms import ProductCreationForm
 
 # All of the following views are written by Vineeth
 # for keeping type of user in track
@@ -209,18 +210,22 @@ def signin(request):
         if request.user.is_authenticated:
             user = request.user
             try:
+                form = ProductCreationForm()
                 seller = Seller.objects.get(seller_id=request.user)
                 return render(request
                                 , 'accounts/profile.html',
                                 {'user': User.objects.get(id=request.user.id),
                                 'data': seller.company_id,
-                                'user_type': "Company"})
+                                'user_type': "Company",
+                                'form': form,
+                                'form_type': 'submit'})
             except:
                 return render(request
                                 , 'accounts/profile.html',
                                 {'user': User.objects.get(id=request.user.id),
                                 'data': Customer.objects.get(customer_id=request.user),
-                                'user_type': "Customer"})
+                                'user_type': "Customer",
+                                'form_type': 'hidden'})
         else:
             form = SigninForm()
             return render(request, "accounts/signin.html", {'form': form}, status=200)

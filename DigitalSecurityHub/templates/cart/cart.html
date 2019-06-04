@@ -1,9 +1,5 @@
 {% extends 'base.html' %}
 {% load crispy_forms_tags %}
-<<<<<<< HEAD
-{% block title %} User Profile {% endblock %}
-{% block content %}
-=======
 {% block title %} Cart {% endblock %}
 
 <!-- Template created by ZMrSnow https://bootsnipp.com/snippets/K012l -->
@@ -14,7 +10,6 @@
 <div id="dAlert" class="alert alert-danger" role="alert">
   Failed to update cart! Are you logged in?
 </div>
->>>>>>> 2d364f230182679bc31f657b3660386a35ea1b0f
 <div class="container">
 	<div class="row">
 		<div class="col-md-3 ">
@@ -22,11 +17,6 @@
             <a href="/accounts/signin" class="list-group-item list-group-item-action">Profile</a>
             <a href="/cart" class="list-group-item list-group-item-action active">Cart</a>
             <a href="#" class="list-group-item list-group-item-action">Orders</a>
-<<<<<<< HEAD
-            <a href="#" class="list-group-item list-group-item-action">Tickets</a>
-            <a href="#" class="list-group-item list-group-item-action">Settings</a>
-=======
->>>>>>> 2d364f230182679bc31f657b3660386a35ea1b0f
             <a href="#" class="list-group-item list-group-item-action">Delete Account</a>
           </div>
 		</div>
@@ -51,15 +41,9 @@
                             <td><img src="https://dummyimage.com/50x50/55595c/fff" /> </td>
                             <td>{{item.Product.Title}}</td>
                             <td>{% if not item.Product.Active %}Unavailable{% elif item.Product.Stock == 0 %}Out of Stock{% else %}In Stock{% endif %}</td>
-<<<<<<< HEAD
-                            <td><input class="form-control" type="text" value="{{item.Quantity}}" /></td>
-                            <td class="text-right">${{item.Product.Price}}</td>
-                            <td class="text-right"><button class="btn btn-sm btn-danger"><i class="fa fa-trash"></i> </button> </td>
-=======
                             <td>{{item.Quantity}}</td>
                             <td class="text-right">${{item.Product.Price}}</td>
                             <td class="text-right"><button onclick="deleteFromCart({{item.product_id}})" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i> </button> </td>
->>>>>>> 2d364f230182679bc31f657b3660386a35ea1b0f
                         </tr>
                       {% endfor %}
                         <tr>
@@ -93,10 +77,6 @@
         <div class="col mb-2">
             <div class="row">
                 <div class="col-sm-12  col-md-6">
-<<<<<<< HEAD
-                    <button class="btn btn-block btn-light">Continue Shopping</button>
-=======
->>>>>>> 2d364f230182679bc31f657b3660386a35ea1b0f
                 </div>
                 <div class="col-sm-12 col-md-6 text-right">
                     <button class="btn btn-lg btn-block btn-success text-uppercase">Checkout</button>
@@ -107,8 +87,6 @@
     </div>
   </div>
 </div>
-<<<<<<< HEAD
-=======
 {% endblock %}
 
 {% block javascript %}
@@ -157,5 +135,4 @@ function deleteFromCart(productId) {
   z-index: 10;
 }
 </style>
->>>>>>> 2d364f230182679bc31f657b3660386a35ea1b0f
 {% endblock %}

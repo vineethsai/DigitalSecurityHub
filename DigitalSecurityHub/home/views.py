@@ -5,26 +5,21 @@ from .models import ContactMessage
 from products.models import Product
 
 def home(request):
-<<<<<<< HEAD:DigitalSecurityHub/home/views.py
-    return render(request, "index.html")
-=======
     return render(request, "index.html", {
         "products": Product.objects.all()[:3].filter()
     })
->>>>>>> 2d364f230182679bc31f657b3660386a35ea1b0f:DigitalSecurityHub/main/views.py
 
 def about(request):
-    return render(request, "main/about.html")
+    return render(request, "home/about.html")
 
 def contact(request):
-    return
     if request.method == 'GET':
-        return render(request, "main/contact.html", {'form': ContactForm})
+        return render(request, "home/contact.html", {'form': ContactForm})
     elif request.method == 'POST':
         form = ContactForm(request.POST)
         # try:
         if form.is_valid():
-            ContactMessage.objects.update_or_create(
+            ContactMessage.objects.create(
                 first_name=form.cleaned_data['first_name'],
                 last_name=form.cleaned_data['last_name'],
                 email=form.cleaned_data['email'],

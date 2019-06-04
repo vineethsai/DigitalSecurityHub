@@ -6,11 +6,7 @@
   <article class="card-body">
     <h4 class="card-title text-center mb-4 mt-1">Sign in</h4>
   	<hr>
-<<<<<<< HEAD
-  	<p class="text-success text-center">UPDATE MESSAGE</p>
-=======
   	<p class="text-success text-center">{{error}}</p>
->>>>>>> 2d364f230182679bc31f657b3660386a35ea1b0f
   	<form action="/accounts/signin"  method="post">{% csrf_token %}
       {% for field in form %}
   	   <div class="form-group">

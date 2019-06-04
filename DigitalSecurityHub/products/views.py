@@ -4,10 +4,11 @@ from accounts.views import output_seller
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
 from cart.models import Cart
 from shop.models import Review
-from accounts.models import Customer, Seller
+from accounts.models import Customer, Seller, Company, User
 from django.db.models import Q
 from django.views.decorators.csrf import csrf_exempt
 import json
+from .forms import ProductCreationForm
 
 from .models import Product
 
@@ -24,22 +25,36 @@ def ProductList(request):
     # Returns a list of all current products
     if request.method == 'GET':
         # render a list of all the product titles
-        return render(request, 'products/productList.html', {'object_list': Product.objects.all()}, status=200)
+        return render(request, 'products/productList.html', {'object_list': Product.objects.all(),
+        'Seller': Seller,
+        'Company': Company}, status=200)
 
     # Allows a vendor to add a new product
     if request.method == 'POST' and request.user.is_authenticated and Seller.objects.get(seller_id=request.user):
         try:
-            json_post = json.loads(request.body)
-            Product.objects.create(
-                title = json_post['title'],
-                description = json_post['description'],
-                price = json_post['price'],
-                stock = json_post['stock'],
-                active = json_post['active'],
-                category = json_post['category'],
-                seller_id = Seller.objects.get(seller_id=request.user),
-            )
-            return HttpResponse('Product added')
+            form = ProductCreationForm(request.POST)
+            if form.is_valid():
+                Product.objects.create(
+                    title = form.cleaned_data['title'],
+                    description = form.cleaned_data['description'],
+                    price = form.cleaned_data['price'],
+                    stock = form.cleaned_data['stock'],
+                    active = form.cleaned_data['active'],
+                    category = form.cleaned_data['category'],
+                    seller_id = Seller.objects.get(seller_id=request.user),
+                )
+                return HttpResponseRedirect('/shop/')
+            # json_post = json.loads(request.body)
+            # Product.objects.create(
+            #     title = json_post['title'],
+            #     description = json_post['description'],
+            #     price = json_post['price'],
+            #     stock = json_post['stock'],
+            #     active = json_post['active'],
+            #     category = json_post['category'],
+            #     seller_id = Seller.objects.get(seller_id=request.user),
+            # )
+            # return HttpResponse('Product added')
         except:
             return HttpResponse("Failed to add new product.", status=500)
 
@@ -48,7 +63,7 @@ def ProductList(request):
         try:
             seller = Seller.objects.get(seller_id=request.user)
             product_list = Product.objects.filter(seller_id=seller).delete()
-            return HttpResponse('Product deleted')
+            return HttpResponseRedirect('/shop/')
         except:
             return HttpResponse("Failed to delete products.", status=500)
 
@@ -91,7 +106,8 @@ def SpecificProduct(request, product_id):
                 'product': product,
                 'reviews':reviews,
                 "avg_rating": 0 if rating_count is 0 else rating_sum / rating_count,
-                "product_id": product_id
+                "product_id": product_id,
+                'company': Seller.objects.get(seller_id=Product.objects.get(id=product_id).seller_id).company_id.name
             })
         except:
             return HttpResponse('Could not find product', status=404)
@@ -133,13 +149,21 @@ def SpecificProduct(request, product_id):
             return HttpResponse('Product could not be updated')
 
     # Will delete the specified product if owned by the current seller
-    if request.method == 'DELETE' and request.user.is_authenticated and Customer.objects.get(customer_id=request.user).type:
-        product = Product.objects.get(id=product_id)
-        seller = Seller.objects.get(seller_id=request.user)
-        if  product.seller_id == seller:
-            Product.objects.get(id=product_id).delete()
-            return HttpResponse('Product deleted from store')
-        else:
+    if request.method == 'DELETE' and request.user.is_authenticated:
+        # try:
+        #     Customer.objects.get(customer_id=User.objects.get(id=request.user.id)).type
+        # except:
+        #     return HttpResponse('You do not have the required permissions', status=401)
+        # else:
+        try:
+            product = Product.objects.get(id=product_id)
+            seller = Seller.objects.get(seller_id=request.user)
+            if  product.seller_id == seller:
+                Product.objects.get(id=product_id).delete()
+                return HttpResponseRedirect('/shop/')
+            else:
+                return HttpResponse('You do not have the required permissions', status=401)
+        except:
             return HttpResponse('You do not have the required permissions', status=401)
 
     # Returns if user is not authenticated

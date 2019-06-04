@@ -37,7 +37,7 @@
             <div class="card bg-light mb-3">
                 <div class="card-body">
                     <a href="" data-toggle="modal" data-target="#productModal">
-                        <img class="img-fluid" src="https://dummyimage.com/800x800/55595c/fff" />
+                        <img class="img-fluid" src="https://www.emazzanti.net/wp-content/uploads/2017/11/Online-Network-Security-Store-PR.jpg" />
                     </a>
                 </div>
             </div>
@@ -49,6 +49,9 @@
                 <div class="card-body">
                     <p class="name"><strong>{{product.Title}}</strong></p>
                     <p class="price">Price: ${{product.Price}}</p>
+                    <p class="price">Company: 
+                    {{company}}
+                    </p>
                       <div class="form-group">
                           <label>Quantity :</label>
                           <div class="input-group mb-3">
@@ -96,6 +99,8 @@
             </div>
         </div>
 
+        
+
         <!-- Reviews -->
         <div class="col-12" id="reviews">
             <div class="card border-light mb-3">
@@ -139,6 +144,14 @@
                 </div>
             </div>
         </div>
+        <div class="col-12" id ="delete">
+            <div class="card border-light mb-3">
+                <div class="card-header bg-primary text-white text-uppercase"><i class="fa fa-align-justify"></i> Delete Product</div>
+                <div class="card-body">
+                    <button onclick="deleteProduct({{product_id}})" type="submit" class="btn btn-primary btn-block"> Delete Product  </button>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
 {% endblock %}
@@ -164,11 +177,29 @@ $(document).ready(function(){
 
 });
 
+
+function deleteProduct(productId) {
+  // Assemble AJAX request
+  var xhr = new XMLHttpRequest();
+  xhr.open("DELETE", "http://" + window.location.host + "/products/" + productId, true);
+  xhr.setRequestHeader('Content-Type', 'application/json')
+
+  xhr.onload = function () {
+    var users = JSON.parse(xhr.responseText);
+    if (xhr.readyState == 4 && xhr.status == "200") {
+      console.table(users);
+    } else {
+      console.error(users);
+    }
+  }
+  xhr.send(null);
+};
+
 var enableNotif = true;
 function addToCart(productId) {
   // Assemble AJAX request
   var xhr = new XMLHttpRequest();
-  xhr.open("POST", "https://" + window.location.host + "/products/" + productId, true);
+  xhr.open("POST", "http://" + window.location.host + "/products/" + productId, true);
   xhr.setRequestHeader('Content-Type', 'application/json')
   xhr.send(JSON.stringify({"quantity": Number($("#quantity").val())}));
 
@@ -196,7 +227,7 @@ function addToCart(productId) {
 function writeReview(productId) {
   // Assemble AJAX request
   var xhr = new XMLHttpRequest();
-  xhr.open("POST", "https://" + window.location.host + "/shop/" + productId + "/review", true);
+  xhr.open("POST", "http://" + window.location.host + "/shop/" + productId + "/review", true);
   xhr.setRequestHeader('Content-Type', 'application/json')
   xhr.send(JSON.stringify({
     "rating": Number($("#rating").val()),

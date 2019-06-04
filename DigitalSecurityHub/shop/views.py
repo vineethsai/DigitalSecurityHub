@@ -9,6 +9,7 @@ from products.views import output_product
 from accounts.views import output_customer
 from accounts.models import Customer
 from django.views.decorators.csrf import csrf_exempt
+import math
 
 
 # Create your views here.
@@ -18,10 +19,6 @@ def shop(request):
     GET: Renders items in the shop.
     """
     if request.method == "GET":
-<<<<<<< HEAD
-        return render(request, "shop/shop.html", {
-            "products": Product.objects.all()
-=======
         categories = []
         for category in Product.objects.order_by().values('category').distinct().filter():
             categories.append(category["category"])
@@ -29,7 +26,6 @@ def shop(request):
         return render(request, "shop/shop.html", {
             "products": Product.objects.all(),
             "category": categories
->>>>>>> 2d364f230182679bc31f657b3660386a35ea1b0f
         })
     return HttpResponse("Method not allowed on shop/" + product_id, status=405)
 
@@ -61,7 +57,7 @@ def productReview(request, product_id):
         return render(request, "shop/reviewList.html", {
             "reviews": output_list,
             "product": Product.objects.get(id=product_id),
-            "avg_rating": 0 if rating_count is 0 else rating_sum / rating_count
+            "avg_rating": 0 if rating_count is 0 else math.floor((rating_sum / rating_count))
         })
 
     # All other http types require json
@@ -160,7 +156,7 @@ def output_review(review):
     return {
         "review_text": review.review_text,
         "date_posted": review.date_posted,
-        "rating": review.rating,
+        "rating": round(review.rating, 2),
         "customer_id": output_customer(review.customer_id),
         "product_id": output_product(review.product_id)
     }

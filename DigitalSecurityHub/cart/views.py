@@ -45,14 +45,9 @@ def cart(request):
 
         # Compiles list of all items in cart
         for item in cart:
-<<<<<<< HEAD
-            print(item)
-            cart_list.append(output_cart(item))
-=======
             output_base = output_cart(item)
             output_base["product_id"] = item.product_id.id
             cart_list.append(output_base)
->>>>>>> 2d364f230182679bc31f657b3660386a35ea1b0f
             total_cost += item.quantity * item.product_id.price
 
         # Returns json serialized message
