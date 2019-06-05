@@ -139,23 +139,26 @@ def SpecificProduct(request, product_id):
 
     # Should add the product to the cart of the authenticated user
     if request.method == "POST" and request.user.is_authenticated:
-        # try:
-        json_post = None
-        if request.body:
-            json_post = json.loads(request.body)
-        # Determines if quantity is default or not
-        quantity = 1
-        if json_post is not None and json_post["quantity"]:
-            quantity = json_post["quantity"]
-        if quantity >= Product.objects.get(id=product_id).stock:
-            quantity = Product.objects.get(id=product_id).stock
-        # Creates new cart object
-        Cart.objects.update_or_create(customer_id=Customer.objects.get(customer_id=request.user),
-                                    product_id=Product.objects.get(id=product_id),
-                                    defaults={"quantity": quantity})
-        return HttpResponse("Successfully added to Cart")  # <-- product should be added to the current logged in user"s cart
-        # except:
-        #     return HttpResponse("Could not add product to cart.", status=500)
+        try:
+            json_post = None
+            if request.body:
+                json_post = json.loads(request.body)
+            # Determines if quantity is default or not
+            quantity = 1
+            if json_post is not None and json_post["quantity"]:
+                quantity = json_post["quantity"]
+            if quantity >= Product.objects.get(id=product_id).stock:
+                quantity = Product.objects.get(id=product_id).stock
+            # Creates new cart object
+            if Product.objects.get(id=product_id).active:
+                Cart.objects.update_or_create(customer_id=Customer.objects.get(customer_id=request.user),
+                                            product_id=Product.objects.get(id=product_id),
+                                            defaults={"quantity": quantity})
+            else:
+                HttpResponse("Item is unavailable")
+            return HttpResponse("Successfully added to Cart")  # <-- product should be added to the current logged in user"s cart
+        except:
+            return HttpResponse("Could not add product to cart.", status=500)
 
     # Will delete the specified product if owned by the current seller
     if request.method == "DELETE" and request.user.is_authenticated:
@@ -183,24 +186,37 @@ def productEdit(request, product_id):
     Edits specific product
     """
     if request.method == "GET" and request.user.is_authenticated:
-        form = ProductEditForm()
-        return render(request, "products/productEditFrom.html", {"form": form})
+        try:
+            product = Product.objects.get(id=product_id)
+            seller = Seller.objects.get(seller_id=request.user)
+            if  product.seller_id == seller:
+                form = ProductEditForm()
+                return render(request, "products/productEditFrom.html", {"form": form})
+            else:
+                return HttpResponse("You do not have the required permissions", status=401)
+        except:
+            return HttpResponse("Failed to process request.", status=500)
     elif request.method == "PATCH" and request.user.is_authenticated:
         try:
-            try:
-                json_post = json.loads(request.body)
-            except:
-                return HttpResponse("Failed to process request.", status=500)
-            product = Product.objects.get(Q(id=product_id) & Q(seller_id=Seller.objects.get(seller_id=request.user)))
-            # should get the specified product of the current logged in seller
-            product = Product.objects.get(Q(id=product_id) & Q(seller_id=Seller.objects.get(seller_id=request.user)))  
-            product.title = json_post["title"]
-            product.description = json_post["description"]
-            product.price = json_post["price"]
-            product.stock = json_post["stock"]
-            product.active = json_post["active"]
-            product.save()            
-            return HttpResponseRedirect("/home/")
+            product = Product.objects.get(id=product_id)
+            seller = Seller.objects.get(seller_id=request.user)
+            if  product.seller_id == seller:
+                try:
+                    json_post = json.loads(request.body)
+                except:
+                    return HttpResponse("Failed to process request.", status=500)
+                product = Product.objects.get(Q(id=product_id) & Q(seller_id=Seller.objects.get(seller_id=request.user)))
+                # should get the specified product of the current logged in seller
+                product = Product.objects.get(Q(id=product_id) & Q(seller_id=Seller.objects.get(seller_id=request.user)))  
+                product.title = json_post["title"]
+                product.description = json_post["description"]
+                product.price = json_post["price"]
+                product.stock = json_post["stock"]
+                product.active = json_post["active"]
+                product.save()            
+                return HttpResponseRedirect("/home/")
+            else:
+                return HttpResponse("You do not have the required permissions", status=401)
         except:
             return HttpResponse("Product could not be updated. You did not create this product!")
     else:
