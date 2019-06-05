@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% block title %} Edit Product {% endblock %}
+<!-- Template created by Raj78 https://bootsnipp.com/snippets/dldxB -->
+{% block content %}
+
+
+<div class="card">
+    <article class="card-body">
+        <h4 class="card-title text-center mb-4 mt-1">Edit Product</h4>
+        <hr>
+        {% csrf_token %}
+  {% for field in form %}
+    <div class="form-group">
+      <div class="input-group">
+          <div class="input-group-prepend">
+              <span class="input-group-text"> {{field.label}} </span>
+          </div>
+          {{ field }}
+      </div>
+    </div>
+    {% endfor %}
+  	    <div class="form-group">
+  	       <button onclick="editProduct()" class="btn btn-primary btn-block"> Edit product  </button>
+        </div>
+        </article>
+      </div>
+
+  {% endblock %}
+
+  {% block javascript %}
+<script>
+function editProduct() {
+  // Assemble AJAX request
+  var xhr = new XMLHttpRequest();
+  xhr.open("PATCH", "http://" + window.location.host + "/products/edit/31", true);
+  xhr.setRequestHeader("X-CSRFToken", $("input[name=csrfmiddlewaretoken]").val())
+  xhr.send(JSON.stringify({
+    "stock": Number($("#stock").val()),
+    "price": Number($("#price").val()),
+    "title": $("#title").val(),
+    "description": $("#description").val(),
+    "active": $("#active_0").val(),
+    "category": $("#category").val()
+  }));
+};
+</script>
+{% endblock %}

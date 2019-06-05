@@ -17,6 +17,12 @@
 <div id="dAlertR" class="alert alert-danger" role="alert">
   Failed to write review! Are you logged in?
 </div>
+<div id="UNAlertR" class="alert alert-primary" role="alert">
+    Product is Unavailable!
+</div>
+<div id="QAlertR" class="alert alert-primary" role="alert">
+    Only {{ pro.stock }} more Items left. All of them have been added to cart!
+</div>
 <div class="container-fluid">
     <div class="row">
         <div class="col">
@@ -69,7 +75,7 @@
                           </div>
                       </div>
                       <button onclick="addToCart({{product_id}})" class="btn btn-success btn-lg btn-block text-uppercase">
-                          <i class="fa fa-shopping-cart"></i> Add To Cart
+                          <i class="fa fa-shopping-cart"></i> {% if not pro.active %}Unavailable{% elif pro.stock == 0 %}Out of Stock{% else %}More Info{% endif %}
                       </button>
                     <div class="reviews_product p-3 mb-2 ">
                         {{reviews|length}} reviews
@@ -150,6 +156,7 @@
             <div class="card border-light mb-3">
                 <div class="card-header bg-primary text-white text-uppercase"><i class="fa fa-align-justify"></i> Delete Product</div>
                 <div class="card-body">
+                    <button onclick="window.location.host + '/products/edit'+ productId" type="submit" class="btn btn-primary btn-block"> Edit Product  </button>
                     <button onclick="deleteProduct({{product_id}})" type="submit" class="btn btn-primary btn-block"> Delete Product  </button>
                 </div>
             </div>
@@ -178,13 +185,25 @@ $(document).ready(function(){
         }
     });
 
-});
+    if (parseInt("{{pro.stock}}") < parseInt($('#quantity').val()))
+    {
+      $("#QAlert").show();
+      setTimeout(function(){
+        $("#QAlert").hide('close');
+        enableNotif = true;
+      }, 2000);
+    }
+    if ("{{pro.active}}" == "False")
+    {
+      $("#UNAlert").show();
+    }
 
+});
 
 function deleteProduct(productId) {
   // Assemble AJAX request
   var xhr = new XMLHttpRequest();
-  xhr.open("DELETE", "https://" + window.location.host + "/products/" + productId, true);
+  xhr.open("DELETE", "http://" + window.location.host + "/products/" + productId, true);
   xhr.setRequestHeader('Content-Type', 'application/json')
 
   xhr.onload = function () {
@@ -202,15 +221,14 @@ var enableNotif = true;
 function addToCart(productId) {
   // Assemble AJAX request
   var xhr = new XMLHttpRequest();
-  xhr.open("POST", "https://" + window.location.host + "/products/" + productId, true);
+  xhr.open("POST", "http://" + window.location.host + "/products/" + productId, true);
   xhr.setRequestHeader('Content-Type', 'application/json')
   xhr.send(JSON.stringify({"quantity": Number($("#quantity").val())}));
-
   // Handle error handling
   enableNotif = false;
   xhr.onreadystatechange = function () {
     if (enableNotif === false) {
-      if (xhr.readyState === 4 && xhr.status === 200) {
+      else if (xhr.readyState === 4 && xhr.status === 200) {
         $("#sAlert").show();
         setTimeout(function(){
           $("#sAlert").hide('close');
@@ -230,7 +248,7 @@ function addToCart(productId) {
 function writeReview(productId) {
   // Assemble AJAX request
   var xhr = new XMLHttpRequest();
-  xhr.open("POST", "https://" + window.location.host + "/shop/" + productId + "/review", true);
+  xhr.open("POST", "http://" + window.location.host + "/shop/" + productId + "/review", true);
   xhr.setRequestHeader('Content-Type', 'application/json')
   xhr.send(JSON.stringify({
     "rating": Number($("#rating").val()),

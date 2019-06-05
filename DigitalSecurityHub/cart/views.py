@@ -115,6 +115,17 @@ def cart(request):
                     quantity = item.quantity,
                     price_extended = item.product_id.price * item.quantity
                 )
+                specific_product = Product.objects.get(id=item.product_id.id)
+                specific_product_stock = specific_product.stock
+
+                message = "Product added"
+                if item.quantity >= specific_product_stock:
+                    item.quantity = specific_product_stock
+                    specific_product.stock = 0
+                    specific_product.active = False
+                    specific_product.save()
+                specific_product.stock = specific_product.stock - item.quantity
+                specific_product.save()
             except:
                 return render(request, "error.html", {
                     "errorcode": 500,
@@ -123,13 +134,13 @@ def cart(request):
                 }, status=500)
 
         # Clears cart
-        for item in cart:
-            try:
+        try:
+            for item in cart:
                 item.delete()
-            except:
-                pass # Can be easily spotted and resolved by users later
+        except:
+            pass # Can be easily spotted and resolved by users later
 
-            return HttpResponseRedirect("/orders")
+        return HttpResponseRedirect("/orders")
 
     if request.method == "DELETE":
         # Attempt to get JSON
