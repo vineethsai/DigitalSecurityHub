@@ -75,7 +75,7 @@
                           </div>
                       </div>
                       <button onclick="addToCart({{product_id}})" class="btn btn-success btn-lg btn-block text-uppercase">
-                          <i class="fa fa-shopping-cart"></i> {% if not pro.active %}Unavailable{% elif pro.stock == 0 %}Out of Stock{% else %}More Info{% endif %}
+                          <i class="fa fa-shopping-cart"></i> {% if not pro.active %}Unavailable{% elif pro.stock == 0 %}Out of Stock{% else %}Add to cart{% endif %}
                       </button>
                     <div class="reviews_product p-3 mb-2 ">
                         {{reviews|length}} reviews
@@ -228,7 +228,7 @@ function addToCart(productId) {
   enableNotif = false;
   xhr.onreadystatechange = function () {
     if (enableNotif === false) {
-      else if (xhr.readyState === 4 && xhr.status === 200) {
+      if (xhr.readyState === 4 && xhr.status === 200) {
         $("#sAlert").show();
         setTimeout(function(){
           $("#sAlert").hide('close');
