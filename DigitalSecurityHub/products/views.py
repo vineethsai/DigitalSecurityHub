@@ -157,22 +157,6 @@ def SpecificProduct(request, product_id):
         # except:
         #     return HttpResponse("Could not add product to cart.", status=500)
 
-    # Allows seller to edit product information (if it is their product)
-    if request.method == "PATCH" and request.user.is_authenticated:
-        try:
-            json_post = json.loads(request.body)
-            product = Product.objects.get(Q(id=product_id) & Q(seller_id=Seller.objects.get(seller_id=request.user)))  # <-- should get the specified product of the current logged in seller
-            product.title = json_post["title"]
-            product.description = json_post["description"]
-            product.price = json_post["price"]
-            # product.seller = json_post["seller"]
-            product.stock = json_post["stock"]
-            product.active = json_post["active"]
-            product.save()
-            return HttpResponse("Product updated")
-        except:
-            return HttpResponse("Product could not be updated")
-
     # Will delete the specified product if owned by the current seller
     if request.method == "DELETE" and request.user.is_authenticated:
         try:
@@ -195,6 +179,9 @@ def SpecificProduct(request, product_id):
 
 
 def productEdit(request, product_id):
+    """
+    Edits specific product
+    """
     if request.method == "GET" and request.user.is_authenticated:
         form = ProductEditForm()
         return render(request, "products/productEditFrom.html", {"form": form})
