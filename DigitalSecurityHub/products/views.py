@@ -112,7 +112,8 @@ def SpecificProduct(request, product_id):
         is_seller = 0
         try:
             seller = Seller.objects.get(seller_id=request.user)
-            is_seller = 0 if seller is product_obj.seller_id else 1
+            is_seller = 1 if seller == product_obj.seller_id and request.user == seller.seller_id else 0
+
         except:
             pass # if this fails it could just mean they aren't a seller so we don't care
 
@@ -126,8 +127,9 @@ def SpecificProduct(request, product_id):
                 "product_id": product_id,
                 "company": Seller.objects.get(seller_id=Product.objects.get(id=product_id).seller_id).company_id.name,
                 "isSeller": is_seller,
-                "pro": Product.objects.get(id=product_id)
-                # "message"="Sorry! There are only " + str(Product.objects.get(id=product_id).stock) + " items left. We've added all of them to the cart. Please come back later!
+                "pro": Product.objects.get(id=product_id),
+                "user": request.user if request.user.is_authenticated else "no",
+                "seller": seller.seller_id if request.user.is_authenticated else "seller"
             })
         except:
             return render(request, "error.html", {
@@ -191,7 +193,7 @@ def productEdit(request, product_id):
             seller = Seller.objects.get(seller_id=request.user)
             if  product.seller_id == seller:
                 form = ProductEditForm()
-                return render(request, "products/productEditFrom.html", {"form": form})
+                return render(request, "products/productEditFrom.html", {"form": form, "pro_id": product_id})
             else:
                 return HttpResponse("You do not have the required permissions", status=401)
         except:

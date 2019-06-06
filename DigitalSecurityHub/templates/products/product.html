@@ -17,10 +17,10 @@
 <div id="dAlertR" class="alert alert-danger" role="alert">
   Failed to write review! Are you logged in?
 </div>
-<div id="UNAlertR" class="alert alert-primary" role="alert">
+<div id="UNAlert" class="alert alert-primary" role="alert">
     Product is Unavailable!
 </div>
-<div id="QAlertR" class="alert alert-primary" role="alert">
+<div id="QAlert" class="alert alert-primary" role="alert">
     Only {{ pro.stock }} more Items left. All of them have been added to cart!
 </div>
 <div class="container-fluid">
@@ -74,7 +74,7 @@
                               </div>
                           </div>
                       </div>
-                      <button onclick="addToCart({{product_id}})" class="btn btn-success btn-lg btn-block text-uppercase">
+                      <button onclick="addToCart({{product_id}})" class="btn btn-success btn-lg btn-block text-uppercase" id="submit">
                           <i class="fa fa-shopping-cart"></i> {% if not pro.active %}Unavailable{% elif pro.stock == 0 %}Out of Stock{% else %}Add to cart{% endif %}
                       </button>
                     <div class="reviews_product p-3 mb-2 ">
@@ -155,8 +155,8 @@
         <div class="col-12" id ="delete">
             <div class="card border-light mb-3">
                 <div class="card-header bg-primary text-white text-uppercase"><i class="fa fa-align-justify"></i> Delete Product</div>
-                <div class="card-body">
-                    <button onclick="window.location.host + '/products/edit'+ productId" type="submit" class="btn btn-primary btn-block"> Edit Product  </button>
+                <div class="card-body">{% csrf_token %}
+                    <button onclick="location.href ='edit/' + {{pro.id}};" type="submit" class="btn btn-primary btn-block">Edit Product </button>
                     <button onclick="deleteProduct({{product_id}})" type="submit" class="btn btn-primary btn-block"> Delete Product  </button>
                 </div>
             </div>
@@ -169,8 +169,12 @@
 {% block javascript%}
 <script>
 $(document).ready(function(){
+    if ("{{pro.active}}" == "False")
+    {
+      document.getElementById("submit").disabled = true;
+      $("#UNAlert").show();
+    }
     var quantity = 1;
-
     $('.quantity-right-plus').click(function(e){
         e.preventDefault();
         var quantity = parseInt($('#quantity').val());
@@ -185,19 +189,6 @@ $(document).ready(function(){
         }
     });
 
-    if (parseInt("{{pro.stock}}") < parseInt($('#quantity').val()))
-    {
-      $("#QAlert").show();
-      setTimeout(function(){
-        $("#QAlert").hide('close');
-        enableNotif = true;
-      }, 2000);
-    }
-    if ("{{pro.active}}" == "False")
-    {
-      $("#UNAlert").show();
-    }
-
 });
 
 function deleteProduct(productId) {
@@ -205,6 +196,7 @@ function deleteProduct(productId) {
   var xhr = new XMLHttpRequest();
   xhr.open("DELETE", "http://" + window.location.host + "/products/" + productId, true);
   xhr.setRequestHeader('Content-Type', 'application/json')
+  xhr.setRequestHeader("X-CSRFToken", $("input[name=csrfmiddlewaretoken]").val())
 
   xhr.onload = function () {
     var users = JSON.parse(xhr.responseText);
@@ -215,10 +207,20 @@ function deleteProduct(productId) {
     }
   }
   xhr.send(null);
+  location.href ='/shop/';
 };
 
 var enableNotif = true;
 function addToCart(productId) {
+
+  if (parseInt("{{pro.stock}}") < parseInt($('#quantity').val()))
+  {
+    $("#QAlert").show();
+    setTimeout(function(){
+      $("#QAlert").hide('close');
+      enableNotif = true;
+    }, 2000);
+  }
   // Assemble AJAX request
   var xhr = new XMLHttpRequest();
   xhr.open("POST", "http://" + window.location.host + "/products/" + productId, true);

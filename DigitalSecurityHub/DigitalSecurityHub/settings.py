@@ -25,7 +25,7 @@ DEBUG = True
 ALLOWED_HOSTS = [
     'localhost',
     '127.0.0.1',
-    '910ce00f.ngrok.io'
+    '634c790a.ngrok.io'
 ]
 
 
@@ -46,6 +46,8 @@ INSTALLED_APPS = [
     "django_extensions",
     "crispy_forms",
     "home.apps.HomeConfig",
+    'corsheaders',
+    'rest_framework',
 ]
 
 # AUTH_USER_MODEL = "auth.User"

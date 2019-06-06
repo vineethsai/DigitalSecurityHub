@@ -32,7 +32,7 @@
 function editProduct() {
   // Assemble AJAX request
   var xhr = new XMLHttpRequest();
-  xhr.open("PATCH", "http://" + window.location.host + "/products/edit/31", true);
+  xhr.open("PATCH", "http://" + window.location.host + "/products/edit/" + {{pro_id}}, true);
   xhr.setRequestHeader("X-CSRFToken", $("input[name=csrfmiddlewaretoken]").val())
   xhr.send(JSON.stringify({
     "stock": Number($("#stock").val()),
@@ -42,6 +42,7 @@ function editProduct() {
     "active": $("#active_0").val(),
     "category": $("#category").val()
   }));
+  location.href ='/products/' + {{pro_id}};
 };
 </script>
 {% endblock %}
