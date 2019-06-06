@@ -14,8 +14,11 @@ runserver_plus included in INSTALLED_APPS, so please uncomment, if not installed
 
 -------
 
-Vineeth:
---------
+## Public Django REST API
+http://localhost:8000/api/?format=json
+
+Only accepts GET request. You can do a POST request, but it might hose the Database
+
 ## Home
 https://127.0.0.1:8000/home/
 
@@ -38,8 +41,6 @@ https://127.0.0.1:8000/accounts/signup2 (DO NOT USE THE LINK - FOLLOW PATH USING
 - POST: sends the required details of seller to API(creates customer entry in models)
 - DELETE: Deletes the vendor from the database - can only be accessed from user profile page/form provided
 
-**HTML 1.x does NOT support anything but GET and POST for forms, so DELETE and PATCH will NOT work on a browser**
-
 ## signin
 https://127.0.0.1:8000/accounts/signin
 - GET: Displays login page if not logged in, else displays user profile
@@ -48,8 +49,6 @@ https://127.0.0.1:8000/accounts/signin
 ## singout
 https://127.0.0.1:8000/accounts/signout
 - GET: Signs out the user
-
------
 
 ## cart
 Route: https://localhost:8000/cart/
