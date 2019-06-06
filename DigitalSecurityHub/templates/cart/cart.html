@@ -16,8 +16,8 @@
 		     <div class="list-group ">
             <a href="/accounts/signin" class="list-group-item list-group-item-action">Profile</a>
             <a href="/cart" class="list-group-item list-group-item-action active">Cart</a>
-            <a href="#" class="list-group-item list-group-item-action">Orders</a>
-            <a href="#" class="list-group-item list-group-item-action">Delete Account</a>
+            <a href="/orders" class="list-group-item list-group-item-action">Orders</a>
+            <a href="/accounts/delete" class="list-group-item list-group-item-action">Delete Account</a>
           </div>
 		</div>
     <div class="col">
@@ -41,8 +41,9 @@
                             <td><img src="https://dummyimage.com/50x50/55595c/fff" /> </td>
                             <td>{{item.Product.Title}}</td>
                             <td>{% if not item.Product.Active %}Unavailable{% elif item.Product.Stock == 0 %}Out of Stock{% else %}In Stock{% endif %}</td>
-                            <td>{{item.Quantity}}</td>
+                            <td>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;{{item.Quantity}}</td>
                             <td class="text-right">${{item.Product.Price}}</td>
+                             {% csrf_token %} 
                             <td class="text-right"><button onclick="deleteFromCart({{item.product_id}})" class="btn btn-sm btn-danger"><i class="fa fa-trash"></i> </button> </td>
                         </tr>
                       {% endfor %}
@@ -98,8 +99,10 @@ var enableNotif = true;
 function deleteFromCart(productId) {
 	// Assemble AJAX request
 	var xhr = new XMLHttpRequest();
-	xhr.open("DELETE", "https://" + window.location.host + "/cart/", true);
-	xhr.setRequestHeader('Content-Type', 'application/json')
+  xhr.open("DELETE", "http://" + window.location.host + "/cart/", true);
+  
+  xhr.setRequestHeader('Content-Type', 'application/json')
+  xhr.setRequestHeader("X-CSRFToken", $("input[name=csrfmiddlewaretoken]").val())
 	xhr.send(JSON.stringify({"product_id": productId}));
 
 	// Handle error handling

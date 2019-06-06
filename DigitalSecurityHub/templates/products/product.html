@@ -17,6 +17,12 @@
 <div id="dAlertR" class="alert alert-danger" role="alert">
   Failed to write review! Are you logged in?
 </div>
+<div id="UNAlert" class="alert alert-primary" role="alert">
+    Product is Unavailable!
+</div>
+<div id="QAlert" class="alert alert-primary" role="alert">
+    Only {{ pro.stock }} more Items left. All of them have been added to cart!
+</div>
 <div class="container-fluid">
     <div class="row">
         <div class="col">
@@ -68,8 +74,8 @@
                               </div>
                           </div>
                       </div>
-                      <button onclick="addToCart({{product_id}})" class="btn btn-success btn-lg btn-block text-uppercase">
-                          <i class="fa fa-shopping-cart"></i> Add To Cart
+                      <button onclick="addToCart({{product_id}})" class="btn btn-success btn-lg btn-block text-uppercase" id="submit">
+                          <i class="fa fa-shopping-cart"></i> {% if not pro.active %}Unavailable{% elif pro.stock == 0 %}Out of Stock{% else %}Add to cart{% endif %}
                       </button>
                     <div class="reviews_product p-3 mb-2 ">
                         {{reviews|length}} reviews
@@ -149,7 +155,8 @@
         <div class="col-12" id ="delete">
             <div class="card border-light mb-3">
                 <div class="card-header bg-primary text-white text-uppercase"><i class="fa fa-align-justify"></i> Delete Product</div>
-                <div class="card-body">
+                <div class="card-body">{% csrf_token %}
+                    <button onclick="location.href ='edit/' + {{pro.id}};" type="submit" class="btn btn-primary btn-block">Edit Product </button>
                     <button onclick="deleteProduct({{product_id}})" type="submit" class="btn btn-primary btn-block"> Delete Product  </button>
                 </div>
             </div>
@@ -161,9 +168,39 @@
 
 {% block javascript%}
 <script>
+  
 $(document).ready(function(){
-    var quantity = 1;
 
+    function setInputFilter(textbox, inputFilter) {
+      ["input", "keydown", "keyup", "mousedown", "mouseup", "select", "contextmenu", "drop"].forEach(function(event) {
+        textbox.addEventListener(event, function() {
+          if (inputFilter(this.value)) {
+            this.oldValue = this.value;
+            this.oldSelectionStart = this.selectionStart;
+            this.oldSelectionEnd = this.selectionEnd;
+          } else if (this.hasOwnProperty("oldValue")) {
+            this.value = this.oldValue;
+            this.setSelectionRange(this.oldSelectionStart, this.oldSelectionEnd);
+          }
+        });
+      });
+    }
+
+    setInputFilter(document.getElementById("quantity"), function(value) {
+      return /^\d*$/.test(value);
+    });
+
+    if (document.getElementById("quantity").value == "NaN")
+    {
+      document.getElementById("quantity").value = 0;
+    }
+    // ______________________
+    if ("{{pro.active}}" == "False")
+    {
+      document.getElementById("submit").disabled = true;
+      $("#UNAlert").show();
+    }
+    var quantity = 1;
     $('.quantity-right-plus').click(function(e){
         e.preventDefault();
         var quantity = parseInt($('#quantity').val());
@@ -180,12 +217,12 @@ $(document).ready(function(){
 
 });
 
-
 function deleteProduct(productId) {
   // Assemble AJAX request
   var xhr = new XMLHttpRequest();
-  xhr.open("DELETE", "https://" + window.location.host + "/products/" + productId, true);
-  xhr.setRequestHeader('Content-Type', 'application/json')
+  xhr.open("DELETE", "http://" + window.location.host + "/products/" + productId, true);
+  // xhr.setRequestHeader('Content-Type', 'application/json')
+  xhr.setRequestHeader("X-CSRFToken", $("input[name=csrfmiddlewaretoken]").val())
 
   xhr.onload = function () {
     var users = JSON.parse(xhr.responseText);
@@ -196,16 +233,25 @@ function deleteProduct(productId) {
     }
   }
   xhr.send(null);
+  location.href ='/shop/';
 };
 
 var enableNotif = true;
 function addToCart(productId) {
+
+  if (parseInt("{{pro.stock}}") < parseInt($('#quantity').val()))
+  {
+    $("#QAlert").show();
+    setTimeout(function(){
+      $("#QAlert").hide('close');
+      enableNotif = true;
+    }, 2000);
+  }
   // Assemble AJAX request
   var xhr = new XMLHttpRequest();
-  xhr.open("POST", "https://" + window.location.host + "/products/" + productId, true);
-  xhr.setRequestHeader('Content-Type', 'application/json')
+  xhr.open("POST", "http://" + window.location.host + "/products/" + productId, true);
+  // xhr.setRequestHeader('Content-Type', 'application/json')
   xhr.send(JSON.stringify({"quantity": Number($("#quantity").val())}));
-
   // Handle error handling
   enableNotif = false;
   xhr.onreadystatechange = function () {
@@ -230,7 +276,7 @@ function addToCart(productId) {
 function writeReview(productId) {
   // Assemble AJAX request
   var xhr = new XMLHttpRequest();
-  xhr.open("POST", "https://" + window.location.host + "/shop/" + productId + "/review", true);
+  xhr.open("POST", "http://" + window.location.host + "/shop/" + productId + "/review", true);
   xhr.setRequestHeader('Content-Type', 'application/json')
   xhr.send(JSON.stringify({
     "rating": Number($("#rating").val()),
