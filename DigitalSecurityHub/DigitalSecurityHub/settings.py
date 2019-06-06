@@ -22,7 +22,11 @@ SECRET_KEY = "o($^&)le@h$tjm!((8blqoztf*r0c^zydto&8)@9@js=159!_h"
 # SECURITY WARNING: don"t run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = [
+    'localhost',
+    '127.0.0.1',
+    'a4c6780b.ngrok.io'
+]
 
 
 # Application definition
@@ -42,6 +46,8 @@ INSTALLED_APPS = [
     "django_extensions",
     "crispy_forms",
     "home.apps.HomeConfig",
+    'corsheaders',
+    'rest_framework',
 ]
 
 # AUTH_USER_MODEL = "auth.User"

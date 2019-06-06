@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.views.generic import ListView
 from accounts.views import output_seller
 from django.http import HttpResponse, HttpResponseRedirect, JsonResponse
@@ -8,7 +8,7 @@ from accounts.models import Customer, Seller, Company, User
 from django.db.models import Q
 from django.views.decorators.csrf import csrf_exempt
 import json
-from .forms import ProductCreationForm
+from .forms import ProductCreationForm, ProductEditForm
 
 from .models import Product
 
@@ -110,9 +110,12 @@ def SpecificProduct(request, product_id):
 
         # Checks if user is the seller
         is_seller = 0
+        sellerId = "seller"
         try:
             seller = Seller.objects.get(seller_id=request.user)
-            is_seller = 0 if seller is product_obj.seller_id else 1
+            is_seller = 1 if seller == product_obj.seller_id and request.user == seller.seller_id else 0
+            sellerId = seller.seller_id
+
         except:
             pass # if this fails it could just mean they aren't a seller so we don't care
 
@@ -125,7 +128,10 @@ def SpecificProduct(request, product_id):
                 "avg_rating": 0 if rating_count is 0 else round(rating_sum / rating_count, 1),
                 "product_id": product_id,
                 "company": Seller.objects.get(seller_id=Product.objects.get(id=product_id).seller_id).company_id.name,
-                "isSeller": is_seller
+                "isSeller": is_seller,
+                "pro": Product.objects.get(id=product_id),
+                "user": request.user if request.user.is_authenticated else "no",
+                "seller": sellerId
             })
         except:
             return render(request, "error.html", {
@@ -141,35 +147,22 @@ def SpecificProduct(request, product_id):
             json_post = None
             if request.body:
                 json_post = json.loads(request.body)
-
             # Determines if quantity is default or not
             quantity = 1
             if json_post is not None and json_post["quantity"]:
                 quantity = json_post["quantity"]
-
+            if quantity >= Product.objects.get(id=product_id).stock:
+                quantity = Product.objects.get(id=product_id).stock
             # Creates new cart object
-            Cart.objects.update_or_create(customer_id=Customer.objects.get(customer_id=request.user),
-                                        product_id=Product.objects.get(id=product_id),
-                                        defaults={"quantity": quantity})
-            return HttpResponse("Product added")  # <-- product should be added to the current logged in user"s cart
+            if Product.objects.get(id=product_id).active:
+                Cart.objects.update_or_create(customer_id=Customer.objects.get(customer_id=request.user),
+                                            product_id=Product.objects.get(id=product_id),
+                                            defaults={"quantity": quantity})
+            else:
+                HttpResponse("Item is unavailable")
+            return HttpResponse("Successfully added to Cart")  # <-- product should be added to the current logged in user"s cart
         except:
             return HttpResponse("Could not add product to cart.", status=500)
-
-    # Allows seller to edit product information (if it is their product)
-    if request.method == "PATCH" and request.user.is_authenticated and Customer.objects.get(customer_id=request.user).type:
-        try:
-            json_post = json.loads(request.body)
-            product = Product.objects.get(Q(id=product_id) & Q(seller_id=Seller.objects.get(seller_id=request.user)))  # <-- should get the specified product of the current logged in seller
-            product.title = json_post["title"]
-            product.description = json_post["description"]
-            product.price = json_post["price"]
-            # product.seller = json_post["seller"]
-            product.stock = json_post["stock"]
-            product.active = json_post["active"]
-            product.save()
-            return HttpResponse("Product updated")
-        except:
-            return HttpResponse("Product could not be updated")
 
     # Will delete the specified product if owned by the current seller
     if request.method == "DELETE" and request.user.is_authenticated:
@@ -178,7 +171,7 @@ def SpecificProduct(request, product_id):
             seller = Seller.objects.get(seller_id=request.user)
             if  product.seller_id == seller:
                 Product.objects.get(id=product_id).delete()
-                return HttpResponseRedirect("/shop/")
+                return HttpResponse("Successfully Deleted")
             else:
                 return HttpResponse("You do not have the required permissions", status=401)
         except:
@@ -190,6 +183,48 @@ def SpecificProduct(request, product_id):
 
     # Return 405 if any other method besides the ones specified above is tried
     return HttpResponse("Method not allowed", status=405)
+
+
+def productEdit(request, product_id):
+    """
+    Edits specific product
+    """
+    if request.method == "GET" and request.user.is_authenticated:
+        # try:
+        product = Product.objects.get(id=product_id)
+        seller = Seller.objects.get(seller_id=request.user)
+        if  product.seller_id == seller:
+            form = ProductEditForm()
+            return render(request, "products/productEditFrom.html", {"form": form, "pro_id": product_id, "product": product})
+        else:
+            return HttpResponse("You do not have the required permissions", status=401)
+        # except:
+        #     return HttpResponse("Failed to process request.", status=500)
+    elif request.method == "PATCH" and request.user.is_authenticated:
+        try:
+            product = Product.objects.get(id=product_id)
+            seller = Seller.objects.get(seller_id=request.user)
+            if  product.seller_id == seller:
+                try:
+                    json_post = json.loads(request.body)
+                except:
+                    return HttpResponse("Failed to process request.", status=500)
+                product = Product.objects.get(Q(id=product_id) & Q(seller_id=Seller.objects.get(seller_id=request.user)))
+                # should get the specified product of the current logged in seller
+                product = Product.objects.get(Q(id=product_id) & Q(seller_id=Seller.objects.get(seller_id=request.user)))  
+                product.title = json_post["title"]
+                product.description = json_post["description"]
+                product.price = json_post["price"]
+                product.stock = json_post["stock"]
+                product.active = json_post["active"]
+                product.save()            
+                return HttpResponseRedirect("/home/")
+            else:
+                return HttpResponse("You do not have the required permissions", status=401)
+        except:
+            return HttpResponse("Product could not be updated. You did not create this product!")
+    else:
+        return HttpResponse("Method not allowed", status=405)
 
 def output_product(product):
     """
