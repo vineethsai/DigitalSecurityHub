@@ -1,0 +1,109 @@
+{% extends 'base.html' %}
+{% block title %} Shop {% endblock %}
+{% block content %}
+<div id="sAlert" class="alert alert-primary" role="alert">
+  Item added to cart!
+</div>
+<div id="dAlert" class="alert alert-danger" role="alert">
+  Failed to add item to cart! Are you logged in?
+</div>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-12 col-sm-3">
+            <div class="card bg-light mb-3">
+                <div class="card-header bg-primary text-white text-uppercase"><i class="fa fa-list"></i> Categories</div>
+                <ul class="list-group category_block">
+                  {% for c in category %}
+                    <li onclick="filterGroup('{{c|cut:' '}}')" class="list-group-item category category_{{c|cut:' '}}"><a>{{c}}</a></li>
+                  {% endfor %}
+                </ul>
+            </div>
+        </div>
+        <div class="col">
+            <div class="row" id="productRow">
+              {% for product in products %}
+                <div class="col-12 col-md-6 col-lg-4 category_obj {{product.category|cut:' '}}">
+                    <div class="card">
+                        <img class="card-img-top" src="https://www.emazzanti.net/wp-content/uploads/2017/11/Online-Network-Security-Store-PR.jpg" alt="Card image cap">
+                        <div class="card-body">
+                            <h4 class="card-title"><a href="/products/{{product.id}}" title="View Product">{{product.name|truncatechars:30}}</a></h4>
+                            <p class="card-text">{{product.description|truncatechars:80}}</p>
+                            <div class="row">
+                                <div class="col">
+                                    <p class="btn btn-danger btn-block">${{product.price}}</p>
+                                </div>
+                                <div class="col">
+                                    <a
+                                      id="prod_{{product.id}}"
+                                      href="/products/{{product.id}}"
+                                      class="btn btn-success btn-block
+                                        {% if not product.active or product.stock == 0 %}disabled{% endif %}"
+                                      >{% if not product.active %}Unavailable{% elif product.stock == 0 %}Out of Stock{% else %}More Info{% endif %}</a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+              {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascript %}
+<script>
+activeCategory = null;
+function filterGroup(id) {
+  if (activeCategory != id) {
+    $($(".category_block").find(".category_" + activeCategory)[0]).removeClass("active");
+    activeCategory = id;
+    $($(".category_block").find(".category_" + activeCategory)[0]).addClass("active");
+  } else {
+    $($(".category_block").find(".category_" + activeCategory)[0]).removeClass("active");
+    activeCategory = null;
+  }
+
+  categories = $("#productRow").find(".category_obj");
+  for (var i = 0; i < categories.length; i++) {
+    if (activeCategory != null) {
+      if (!$(categories[i]).hasClass(activeCategory)) {
+        $(categories[i]).css("display", "none");
+      } else {
+        $(categories[i]).css("display", "");
+      }
+    } else {
+      $(categories[i]).css("display", "");
+    }
+  }
+}
+</script>
+{% endblock %}
+
+{% block base_head %}
+<style>
+.alert {
+  display: none;
+  position: absolute;
+  width: 100%;
+  top: 100;
+  left: 0;
+  text-align:
+  center;
+  z-index: 10;
+}
+
+.btn {
+  width: 100%;
+}
+
+.category {
+  cursor: pointer;
+}
+
+.category_obj {
+  min-height: 35em;
+  max-height: 35em;
+}
+</style>
+{% endblock %}

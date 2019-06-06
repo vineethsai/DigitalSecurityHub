@@ -1,3 +1,35 @@
 {% extends 'base.html' %}
-{% load crispy_forms_tags %}
-{% block title %} Delete {% endblock %}
+{% block title %} Delete Account {% endblock %}
+
+{% block content %}
+<div class="card">
+  <article class="card-body">
+    <h4 class="card-title text-center mb-4 mt-1">Are you sure you'd like to delete your account? This cannot be undone</h4>
+    <div>
+      <div>
+  	    {% csrf_token %}
+        <p>Type "Delete" in the text box then press delete if you are sure.</p>
+        {{form.delete}}
+  	    <div class="form-group">
+  	       <button onclick="deleteUser()" class="btn btn-danger btn-block"> Delete Account  </button>
+  	    </div>
+      </div>
+     </div>
+  </article>
+</div>
+{% endblock %}
+
+{% block javascript %}
+<script>
+function deleteUser() {
+  if ($("#id_delete").val() !== "Delete") {
+    return
+  }
+  // Assemble AJAX request
+  var xhr = new XMLHttpRequest();
+  xhr.open("DELETE", "https://" + window.location.host + "/accounts/customer", true);
+  xhr.setRequestHeader("X-CSRFToken", $("input[name=csrfmiddlewaretoken]").val())
+  xhr.send();
+};
+</script>
+{% endblock %}

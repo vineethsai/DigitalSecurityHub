@@ -1,0 +1,107 @@
+{% extends 'base.html' %}
+{% block title %} Contact Us {% endblock %}
+
+<!-- Template by T-PHP https://t-php.fr/43-theme-ecommerce-bootstrap-4.html -->
+{% block content %}
+<div id="sAlert" class="alert alert-primary" role="alert">
+  Thank you for your inquiry!
+</div>
+<div id="dAlert" class="alert alert-danger" role="alert">
+  Failed to send message :(
+</div>
+<section class="jumbotron text-center">
+    <div class="container-fluid">
+        <h1 class="jumbotron-heading">CONTACT DIGITAL SECURITY HUB</h1>
+        <p class="lead text-muted mb-0">Contact us with any buisness inquiries or questions!</p>
+    </div>
+</section>
+<div class="container-fluid">
+    <div class="row">
+        <div class="col">
+            <div class="card">
+                <div class="card-header bg-primary text-white"><i class="fa fa-envelope"></i> Contact us.
+                </div>
+                <div class="card-body">
+                    <!-- <form action="/home/contact"  method="POST"> -->
+                      {% csrf_token %}
+                        {% for field in form %}
+                        <div class="form-group">
+                            {{field.id}}
+                            <label for="{{field.auto_id}}">{{field.label}}</label>
+                            {{ field }}
+                        </div>
+                        {% endfor %}
+                        <div class="mx-auto">
+                        <button onclick="sendMessage()" type="submit" class="btn btn-primary text-right">Submit</button></div>
+                    <!-- </form> -->
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-sm-4">
+            <div class="card bg-light mb-3">
+                <div class="card-header bg-success text-white text-uppercase"><i class="fa fa-home"></i> Address</div>
+                <div class="card-body">
+                    <p>University of Washington</p>
+                    <p>1851 NE Grant Ln</p>
+                    <p>Seattle, WA 98105</p>
+                    <p>Email : digitatlsecurityhub@example.com</p>
+                    <p>Tel. (123) 456-7890</p>
+
+                </div>
+
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block javascript %}
+<script>
+var enableNotif = true;
+function sendMessage() {
+  // Assembled request
+  var xhr = new XMLHttpRequest();
+  xhr.open("POST", "https://" + window.location.host + "/home/contact", true);
+  xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+
+  // Get document params
+  params = "csrfmiddlewaretoken=" +	jQuery("[name=csrfmiddlewaretoken]").val() +
+    "&first_name=" + $("#id_first_name").val() +
+    "&last_name=" + $("#id_last_name").val() +
+    "&email=" + $("#id_email").val() +
+    "&message=" + $("#id_message").val()
+
+
+  // Send request
+  xhr.send(params);
+
+  // Display error handling
+  enableNotif = false;
+  xhr.onreadystatechange = function () {
+    if (enableNotif === false) {
+      if (xhr.readyState === 4 && xhr.status === 200) {
+        $("#sAlert").show();
+      } else if (xhr.readyState === 4 && xhr.status !== 200) {
+        $("#dAlert").show();
+      }
+    }
+  };
+};
+
+</script>
+{% endblock %}
+
+{% block base_head %}
+<style>
+.alert {
+  display: none;
+  position: absolute;
+  width: 100%;
+  top: 100;
+  left: 0;
+  text-align:
+  center;
+  z-index: 10;
+}
+</style>
+{% endblock %}
