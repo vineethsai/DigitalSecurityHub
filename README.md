@@ -17,7 +17,7 @@ runserver_plus included in INSTALLED_APPS, so please uncomment, if not installed
 ## Public Django REST API
 http://localhost:8000/api/?format=json
 
-Only accepys GET request. You can do a POST request, but it might hose the Database
+Only accepts GET request. You can do a POST request, but it might hose the Database
 
 ## Home
 https://127.0.0.1:8000/home/
