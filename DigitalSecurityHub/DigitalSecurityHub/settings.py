@@ -22,11 +22,7 @@ SECRET_KEY = "o($^&)le@h$tjm!((8blqoztf*r0c^zydto&8)@9@js=159!_h"
 # SECURITY WARNING: don"t run with debug turned on in production!
 DEBUG = False
 
-ALLOWED_HOSTS = [
-    'localhost',
-    '127.0.0.1',
-    'a4c6780b.ngrok.io'
-]
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -87,9 +83,17 @@ WSGI_APPLICATION = "DigitalSecurityHub.wsgi.application"
 # https://docs.djangoproject.com/en/2.2/ref/settings/#databases
 
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": os.path.join(BASE_DIR, "db.sqlite3"),
+    'default': {
+        'ENGINE': 'sql_server.pyodbc',
+        'NAME': 'info441-final',
+        'USER': 'security-admin@info441-security',
+        'PASSWORD': 'superSecure!',
+        'HOST': 'tcp:info441-security.database.windows.net',
+        'PORT': '1433',
+        'OPTIONS': {
+            'driver': 'ODBC Driver 13 for SQL Server',
+            'MARS_Connection': 'True',
+        }
     }
 }
 
@@ -136,8 +140,10 @@ SESSION_COOKIE_AGE = 3600
 
 STATIC_URL = "/static/"
 
-STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, "static_my_proj"),
-]
+STATIC_ROOT = '/code'
+
+# STATICFILES_DIRS = [
+#     os.path.join(BASE_DIR, "static_my_proj"),
+# ]
 
 STATIC_ROOT = os.path.join(os.path.dirname(BASE_DIR), "static_cdn", "static_root")
