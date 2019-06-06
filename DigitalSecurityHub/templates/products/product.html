@@ -249,7 +249,7 @@ function addToCart(productId) {
   }
   // Assemble AJAX request
   var xhr = new XMLHttpRequest();
-  xhr.open("POST", "http://" + window.location.host + "/products/" + productId, true);
+  xhr.open("POST", ""+ productId, true);
   // xhr.setRequestHeader('Content-Type', 'application/json')
   xhr.send(JSON.stringify({"quantity": Number($("#quantity").val())}));
   // Handle error handling
