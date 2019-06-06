@@ -142,6 +142,8 @@ STATIC_URL = "/static/"
 
 STATIC_ROOT = '/code'
 
+CORS_ORIGIN_ALLOW_ALL = True
+
 # STATICFILES_DIRS = [
 #     os.path.join(BASE_DIR, "static_my_proj"),
 # ]

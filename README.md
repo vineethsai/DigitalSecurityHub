@@ -140,6 +140,10 @@ Route: https://localhost:8000/shop/
 **/products/<int:product_id>**
 - GET: Returns the information of a specific product.
 - POST: Adds the current product to a cart.
+- DELETE: Allows the seller to delete just the specified item (if they own it and are logged in)
+
+**/products/edit/<int:product_id>**
+- GET: Returns/renders the product edit page form
 - PATCH: Allows an authorized, logged in seller to edit the information of the specified product (as long as it is their product), takes json with title, description, price, stock, and active status
 ```json
 {
@@ -150,7 +154,6 @@ Route: https://localhost:8000/shop/
   "active": "true"
 }
 ```
-- DELETE: Allows the seller to delete just the specified item (if they own it and are logged in)
 
 ## orders
 **/orders/<int:order_id>**
