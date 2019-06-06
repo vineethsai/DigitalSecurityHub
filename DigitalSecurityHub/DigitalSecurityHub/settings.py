@@ -42,6 +42,8 @@ INSTALLED_APPS = [
     "django_extensions",
     "crispy_forms",
     "home.apps.HomeConfig",
+    'corsheaders',
+    'rest_framework',
 ]
 
 # AUTH_USER_MODEL = "auth.User"
