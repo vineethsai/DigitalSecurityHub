@@ -15,5 +15,4 @@ urlpatterns = [
     path("home/", include("home.urls")),
     path("shop/", include("shop.urls")),
     path('api/', include('products.api.urls')),
-    re_path(r'^favicon\.ico$',RedirectView.as_view(url='/favicon.ico')),
 ]
