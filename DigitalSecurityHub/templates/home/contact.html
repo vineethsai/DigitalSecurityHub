@@ -61,7 +61,7 @@ var enableNotif = true;
 function sendMessage() {
   // Assembled request
   var xhr = new XMLHttpRequest();
-  xhr.open("POST", "http://" + window.location.host + "/home/contact", true);
+  xhr.open("POST", "https://" + window.location.host + "/home/contact", true);
   xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 
   // Get document params

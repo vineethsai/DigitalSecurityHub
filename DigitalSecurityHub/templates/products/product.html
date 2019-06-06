@@ -220,7 +220,7 @@ $(document).ready(function(){
 function deleteProduct(productId) {
   // Assemble AJAX request
   var xhr = new XMLHttpRequest();
-  xhr.open("DELETE", "http://" + window.location.host + "/products/" + productId, true);
+  xhr.open("DELETE", "https://" + window.location.host + "/products/" + productId, true);
   // xhr.setRequestHeader('Content-Type', 'application/json')
   xhr.setRequestHeader("X-CSRFToken", $("input[name=csrfmiddlewaretoken]").val())
 
@@ -249,7 +249,7 @@ function addToCart(productId) {
   }
   // Assemble AJAX request
   var xhr = new XMLHttpRequest();
-  xhr.open("POST", "http://" + window.location.host + "/products/" + productId, true);
+  xhr.open("POST", "https://" + window.location.host + "/products/" + productId, true);
   // xhr.setRequestHeader('Content-Type', 'application/json')
   xhr.send(JSON.stringify({"quantity": Number($("#quantity").val())}));
   // Handle error handling
@@ -276,7 +276,7 @@ function addToCart(productId) {
 function writeReview(productId) {
   // Assemble AJAX request
   var xhr = new XMLHttpRequest();
-  xhr.open("POST", "http://" + window.location.host + "/shop/" + productId + "/review", true);
+  xhr.open("POST", "https://" + window.location.host + "/shop/" + productId + "/review", true);
   xhr.setRequestHeader('Content-Type', 'application/json')
   xhr.send(JSON.stringify({
     "rating": Number($("#rating").val()),
