@@ -27,7 +27,7 @@ def shop(request):
             "products": Product.objects.all(),
             "category": categories
         })
-    return HttpResponse("Method not allowed on shop/" + product_id, status=405)
+    return HttpResponse("Method not allowed on shop/" , status=405)
 
 @csrf_exempt
 def productReview(request, product_id):

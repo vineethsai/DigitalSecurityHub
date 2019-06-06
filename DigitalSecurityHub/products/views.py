@@ -110,9 +110,11 @@ def SpecificProduct(request, product_id):
 
         # Checks if user is the seller
         is_seller = 0
+        sellerId = "seller"
         try:
             seller = Seller.objects.get(seller_id=request.user)
             is_seller = 1 if seller == product_obj.seller_id and request.user == seller.seller_id else 0
+            sellerId = seller.seller_id
 
         except:
             pass # if this fails it could just mean they aren't a seller so we don't care
@@ -129,7 +131,7 @@ def SpecificProduct(request, product_id):
                 "isSeller": is_seller,
                 "pro": Product.objects.get(id=product_id),
                 "user": request.user if request.user.is_authenticated else "no",
-                "seller": seller.seller_id if request.user.is_authenticated else "seller"
+                "seller": sellerId
             })
         except:
             return render(request, "error.html", {
@@ -169,7 +171,7 @@ def SpecificProduct(request, product_id):
             seller = Seller.objects.get(seller_id=request.user)
             if  product.seller_id == seller:
                 Product.objects.get(id=product_id).delete()
-                return HttpResponseRedirect("/shop/")
+                return HttpResponse("Successfully Deleted")
             else:
                 return HttpResponse("You do not have the required permissions", status=401)
         except:
@@ -188,16 +190,16 @@ def productEdit(request, product_id):
     Edits specific product
     """
     if request.method == "GET" and request.user.is_authenticated:
-        try:
-            product = Product.objects.get(id=product_id)
-            seller = Seller.objects.get(seller_id=request.user)
-            if  product.seller_id == seller:
-                form = ProductEditForm()
-                return render(request, "products/productEditFrom.html", {"form": form, "pro_id": product_id})
-            else:
-                return HttpResponse("You do not have the required permissions", status=401)
-        except:
-            return HttpResponse("Failed to process request.", status=500)
+        # try:
+        product = Product.objects.get(id=product_id)
+        seller = Seller.objects.get(seller_id=request.user)
+        if  product.seller_id == seller:
+            form = ProductEditForm()
+            return render(request, "products/productEditFrom.html", {"form": form, "pro_id": product_id, "product": product})
+        else:
+            return HttpResponse("You do not have the required permissions", status=401)
+        # except:
+        #     return HttpResponse("Failed to process request.", status=500)
     elif request.method == "PATCH" and request.user.is_authenticated:
         try:
             product = Product.objects.get(id=product_id)

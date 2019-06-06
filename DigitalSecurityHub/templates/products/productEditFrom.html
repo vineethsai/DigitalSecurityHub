@@ -39,7 +39,7 @@ function editProduct() {
     "price": Number($("#price").val()),
     "title": $("#title").val(),
     "description": $("#description").val(),
-    "active": $("#active_0").val(),
+    "active": {% if product.active  %} "False" {% else %} "True" {% endif %},
     "category": $("#category").val()
   }));
   location.href ='/products/' + {{pro_id}};
