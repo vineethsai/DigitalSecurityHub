@@ -13,6 +13,9 @@ import json
 
 # Create your views here.
 def output_order(order, sensitive=False):
+    """
+    Returns an order in json
+    """
     return_obj = {
         "Customer": output_customer(order.customer_id),
         "OrderDate": order.order_date,
@@ -33,6 +36,9 @@ def output_order(order, sensitive=False):
     return return_obj
 
 def output_line_item(lineItem):
+    """
+    Returns line item in json
+    """
     return {
         "Order": output_order(lineItem.order_id),
         "Product": output_product(lineItem.product_id),
