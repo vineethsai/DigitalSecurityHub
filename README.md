@@ -22,10 +22,12 @@ Only accepts GET request. You can do a POST request, but it might hose the Datab
 ## Home
 https://127.0.0.1:8000/home/
 
+Renders the home page for the application.
+
 ## Signup
 https://127.0.0.1:8000/accounts/signup
 - GET: Displays signup page
-- POST: Sends in singup parameters, logs user in and redirects to signup2 (creates USER in user model)
+- POST: Sends in signup parameters, logs user in and redirects to signup2 (creates USER in user model)
 
 ## signup2
 https://127.0.0.1:8000/accounts/signup2 (DO NOT USE THE LINK - FOLLOW PATH USING SIGNUP)
@@ -49,6 +51,16 @@ https://127.0.0.1:8000/accounts/signin
 ## singout
 https://127.0.0.1:8000/accounts/signout
 - GET: Signs out the user
+
+## contact
+https://127.0.0.1:8000/contact
+
+Submits an inquiry to the admins.
+
+## checkout
+https://127.0.0.1:8000/orders/checkout
+
+Allows the user to checkout their cart and add to order.
 
 ## cart
 Route: https://localhost:8000/cart/
@@ -138,9 +150,9 @@ Route: https://localhost:8000/shop/
 - DELETE: Allows the currently logged in vendor to delete all of their products
 
 **/products/<int:product_id>**
-- GET: Returns the information of a specific product.
+- GET: Returns the information of a specific product. Reviews can be posted and internal links are available to add to cart, review, and (if authorized) edit the product.
 - POST: Adds the current product to a cart.
-- PATCH: Allows an authorized, logged in seller to edit the information of the specified product (as long as it is their product), takes json with title, description, price, stock, and active status
+- PATCH: Allows an authorized, logged in seller to edit the information of the specified product (as long as it is their product), takes json with title, description, price, stock, and active status. There is a form available for this.
 ```json
 {
   "title": "some title",
@@ -150,11 +162,11 @@ Route: https://localhost:8000/shop/
   "active": "true"
 }
 ```
-- DELETE: Allows the seller to delete just the specified item (if they own it and are logged in)
+- DELETE: Allows the seller to delete just the specified item (if they own it and are logged in). There is a form available for this.
 
 ## orders
 **/orders/<int:order_id>**
-- GET: Returns information about the specified order in json format.  User must be logged in and it must be their order.
+- GET: Renders page with information about the specified order.  User must be logged in and it must be their order.
 - DELETE: Allows the logged in user to delete/cancel their order (if it is their order)
 - PATCH: Allows the logged in user to edit the order if it is their order, they can only edit the date not the price, takes a json array.
 ```json
@@ -165,5 +177,8 @@ Route: https://localhost:8000/shop/
 
 # Other Notes
 A commit broke the database for a little bit while developing. Some of the commits have pycache files and the db as a result. This was necessary in order to fix the issue.
+
+# If Azure is failing
+For a branch that has up to date code with master just without any of the Azure deployment files. checkout `vineeth-final-3`.
 
 
