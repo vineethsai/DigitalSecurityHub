@@ -32,7 +32,7 @@
 function editProduct() {
   // Assemble AJAX request
   var xhr = new XMLHttpRequest();
-  xhr.open("PATCH", "http://" + window.location.host + "/products/edit/" + {{pro_id}}, true);
+  xhr.open("PATCH", "https://" + window.location.host + "/products/edit/" + {{pro_id}}, true);
   xhr.setRequestHeader("X-CSRFToken", $("input[name=csrfmiddlewaretoken]").val())
   xhr.send(JSON.stringify({
     "stock": Number($("#stock").val()),

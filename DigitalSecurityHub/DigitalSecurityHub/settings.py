@@ -20,7 +20,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = "o($^&)le@h$tjm!((8blqoztf*r0c^zydto&8)@9@js=159!_h"
 
 # SECURITY WARNING: don"t run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -141,6 +141,8 @@ SESSION_COOKIE_AGE = 3600
 STATIC_URL = "/static/"
 
 STATIC_ROOT = '/code'
+
+CORS_ORIGIN_ALLOW_ALL = True
 
 # STATICFILES_DIRS = [
 #     os.path.join(BASE_DIR, "static_my_proj"),

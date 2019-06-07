@@ -74,7 +74,6 @@ def SpecificProduct(request, product_id):
     """
     GET: renders JSON of specific product
     POST: adds product to cart
-    PATCH: edits product information if seller
     DELETE: deletes product if seller
     """
     # Import done here to allow prior dependencies to compile
@@ -187,7 +186,8 @@ def SpecificProduct(request, product_id):
 
 def productEdit(request, product_id):
     """
-    Edits specific product
+    GET: Returns/renders the product edit page form
+    PATCH: Allows authorized user to edit a product's information if they own it
     """
     if request.method == "GET" and request.user.is_authenticated:
         # try:

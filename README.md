@@ -165,6 +165,12 @@ Route: https://localhost:8000/shop/
 - DELETE: Allows the seller to delete just the specified item (if they own it and are logged in). There is a form available for this.
 
 ## orders
+**/orders**
+- GET: Renders all the users previous orders.
+
+**/orders/checkout**
+- GET: Renders the checkout page for the current items in a customer's cart.
+
 **/orders/<int:order_id>**
 - GET: Renders page with information about the specified order.  User must be logged in and it must be their order.
 - DELETE: Allows the logged in user to delete/cancel their order (if it is their order)

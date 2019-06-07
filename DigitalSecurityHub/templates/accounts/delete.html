@@ -27,7 +27,7 @@ function deleteUser() {
   }
   // Assemble AJAX request
   var xhr = new XMLHttpRequest();
-  xhr.open("DELETE", "http://" + window.location.host + "/accounts/customer", true);
+  xhr.open("DELETE", "https://" + window.location.host + "/accounts/customer", true);
   xhr.setRequestHeader("X-CSRFToken", $("input[name=csrfmiddlewaretoken]").val())
   xhr.send();
 };
